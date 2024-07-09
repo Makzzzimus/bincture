@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "bmp.h"
 
 
@@ -11,6 +12,9 @@ int main(){
     char path[255];
     int width = 0, height = 0;
     askPath(path);
+    if(path[strlen(path)-1] == '\n'){
+        path[strlen(path)-1] = '\0';
+    }
     //width = askWidth();
     //height = askHeight();
 

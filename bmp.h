@@ -2,7 +2,7 @@
 
 void writePixelFromFile(FILE, FILE*);
 
-long writeHeader(FILE, FILE*);
+int writeHeader(FILE, FILE*);
 void writeDIB(FILE*, int, int);
 void writeImageDataFromFile(FILE, FILE*, long);
 
