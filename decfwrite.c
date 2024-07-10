@@ -3,7 +3,7 @@
 //Perhaps I should combine those functions into one. Maybe later
 
 void fwrite16le(FILE *file, short number){ //write short to binary using little-endian
-    unsigned char bytes[4] = "\0";
+    unsigned char bytes[2] = "\0";
     bytes[0] = number;
     bytes[1] = number >> 8;
 
@@ -21,7 +21,7 @@ void fwrite32le(FILE *file, int number){ //write integer to binary using little-
 }
 
 void fwrite64le(FILE *file, long number){ //write long to binary using little-endian
-    unsigned char bytes[4] = "\0";
+    unsigned char bytes[8] = "\0";
     bytes[0] = number;
     bytes[1] = number >> 8;
     bytes[2] = number >> 16;
