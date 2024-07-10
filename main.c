@@ -15,10 +15,10 @@ int main(){
     if(path[strlen(path)-1] == '\n'){
         path[strlen(path)-1] = '\0';
     }
-    //width = askWidth();
-    //height = askHeight();
+    width = askWidth();
+    height = askHeight();
 
-    buildBmpFromFile(path, 500, 500);
+    buildBmpFromFile(path, width, height);
 
     return 0;
 }

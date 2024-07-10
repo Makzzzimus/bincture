@@ -1,5 +1,7 @@
 void linux_strrev(char *string);
 
+void swapc(char *c1, char *c2);
+
 #ifdef _WIN32
     #define OS "windows"
 #elif __linux__

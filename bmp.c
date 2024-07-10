@@ -5,7 +5,7 @@
 #include "decfwrite.h"
 #include "os.h"
 
-#define OFFSET_TO_IMAGE_DATA 54           //dec 54 = char '6' = hex = 36. 36 is offset to Image Data
+#define OFFSET_TO_IMAGE_DATA 54           //dec 54 = hex = 36
 
 #define DIB_SIZE 40                       //Always 40
 #define COLOR_PLANES 1                    //Always 1
@@ -32,6 +32,20 @@ void getFileName(char* path, char* fileName){
         }
     }
 }
+
+void writePixelFromFile(FILE *userFile, FILE *bmp, int processedPixels){
+    char pixel[4] = "\0";
+    fseek(userFile, 54 + processedPixels, SEEK_SET);
+    for (int i = 0; i < 3; i++){
+        fseek(userFile, i, SEEK_CUR);
+        pixel[i] = fgetc(userFile);
+    }
+    swapc(&pixel[0], &pixel[2]);
+
+    fwrite(pixel, sizeof(char), 3, bmp);
+    return;
+}
+
 
 int writeHeader(FILE *userFile, FILE *bmp){
     unsigned int userFileSize = 0;
@@ -68,7 +82,22 @@ void writeDIB(FILE *bmp, int width, int height){
 
     fwrite32le(bmp, NUMBER_OF_COLORS);
     fwrite32le(bmp, NUMBER_OF_IMPORTANT_COLORS);
+
+    return;
 }
+
+void writeImageDataFromFile(FILE *userFile, FILE *bmp, int userFileSize){
+    int unusedPixels = 0;
+
+    if((userFileSize - unusedPixels) % 3 != 0){
+        unusedPixels = userFileSize % 3;
+    }
+
+    for (unsigned int processedPixels = 0; processedPixels < userFileSize - unusedPixels; processedPixels += 3){
+        writePixelFromFile(userFile, bmp, processedPixels);
+    }
+}
+
 
 FILE* buildBmpFromFile(char *userPath, int width, int height){
     char userFileName[256] = "\0", bmpPath[256] = "\0";
@@ -106,9 +135,12 @@ FILE* buildBmpFromFile(char *userPath, int width, int height){
     strcat(bmpPath, ".bmp");
 
     FILE *bmp = fopen(bmpPath, "wb"); 
+
     userFileSize = writeHeader(userFile, bmp);
 
     writeDIB(bmp, width, height);
+
+    writeImageDataFromFile(userFile, bmp, userFileSize);
 
     fclose(bmp);
 }

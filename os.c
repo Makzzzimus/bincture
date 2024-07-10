@@ -11,3 +11,9 @@ void linux_strrev(char *string){
         string[chars+1] = '\0';
     }
 }
+
+void swapc(char *c1, char *c2){
+    char *temp = c1;
+    c1 = c2;
+    c2 = temp;
+}

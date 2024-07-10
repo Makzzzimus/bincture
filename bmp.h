@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-void writePixelFromFile(FILE *userFile, FILE *bmp);
+void writePixelFromFile(FILE *userFile, FILE *bmp, int processedPixels);
 
 int writeHeader(FILE *userFile, FILE *bmp);
 void writeDIB(FILE *bmp, int width, int height);
