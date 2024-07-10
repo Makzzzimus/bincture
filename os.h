@@ -1,7 +1,10 @@
+void linux_strrev(char *string);
+
 #ifdef _WIN32
     #define OS "windows"
 #elif __linux__
     #define OS "linux"
+    #define strrev(string) linux_strrev(string)
 #elif TARGET_OS_MAC 
     #define OS "mac"
 #else

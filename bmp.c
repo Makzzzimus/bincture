@@ -3,18 +3,19 @@
 #include <string.h>
 #include <sys/stat.h>
 #include "decfwrite.h"
+#include "os.h"
 
-#define OFFSET_TO_IMAGE_DATA 54 //dec 54 = char '6' = hex = 36. 36 is offset to Image Data
+#define OFFSET_TO_IMAGE_DATA 54           //dec 54 = char '6' = hex = 36. 36 is offset to Image Data
 
-#define DIB_SIZE 40 //Always 40
-#define COLOR_PLANES 1 //Always 1
-#define BITS_PER_PIXEL 24 //True color picture (Transparency isn't supported)
-#define COMPRESSION_METHOD 0 //None
-#define IMAGE_SIZE 0 //Needed only if compression method is used
-#define HORIZONTAL_PIXELS_PER_METER 1800 // =~ 45 ppi. Used for printing
-#define VERTICAL_PIXELS_PER_METER 1800 // =~ 45 ppi. Used for printing
-#define NUMBER_OF_COLORS 0 // Default value
-#define NUMBER_OF_IMPORTANT_COLORS 0 //Every color is important
+#define DIB_SIZE 40                       //Always 40
+#define COLOR_PLANES 1                    //Always 1
+#define BITS_PER_PIXEL 24                 //True color picture (Transparency isn't supported)
+#define COMPRESSION_METHOD 0              //None
+#define IMAGE_SIZE 0                      //Needed only if compression method is used
+#define HORIZONTAL_PIXELS_PER_METER 1800  // =~ 45 ppi. Used for printing
+#define VERTICAL_PIXELS_PER_METER 1800    // =~ 45 ppi. Used for printing
+#define NUMBER_OF_COLORS 0                //Default value
+#define NUMBER_OF_IMPORTANT_COLORS 0      //Every color is important
 
 // Variables prefixed with [user] refer to the user file
 // Variables prefixed with [bmp] refer to the visualization file
@@ -70,10 +71,14 @@ void writeDIB(FILE *bmp, int width, int height){
 }
 
 FILE* buildBmpFromFile(char *userPath, int width, int height){
-    char userFileName[255] = "\0", bmpPath[255] = ".\\Bincture visualizations\\";
+    char userFileName[256] = "\0", bmpPath[256] = "\0";
     unsigned int userFileSize = 0;
     
     FILE *userFile = fopen(userPath, "r");
+    if (userFile == NULL){
+        puts("Enter the valid path to a file");
+        exit(EXIT_FAILURE);
+    }
     /*if (OS == "windows"){
         
     }
@@ -88,18 +93,22 @@ FILE* buildBmpFromFile(char *userPath, int width, int height){
     }
     bmpPath()*/
     
-    mkdir(".\\Bincture visualizations\\");
+    (OS == "windows") ? strcpy(bmpPath, ".\\Bincture visualizations\\") : strcpy(bmpPath, "./Bincture visualizations/");
+
+    #ifdef _WIN32
+        mkdir(bmpPath);
+    #else
+        mkdir(bmpPath, 0777);
+    #endif
 
     getFileName(userPath, userFileName); 
     strncat(bmpPath, userFileName, strlen(userFileName));
     strcat(bmpPath, ".bmp");
 
     FILE *bmp = fopen(bmpPath, "wb"); 
-    if (bmp == NULL){
-        puts("failure");
-    }
     userFileSize = writeHeader(userFile, bmp);
+
     writeDIB(bmp, width, height);
 
-    fclose(bmp); //temporary
+    fclose(bmp);
 }

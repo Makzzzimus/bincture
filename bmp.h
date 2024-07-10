@@ -1,10 +1,10 @@
 #include <stdio.h>
 
-void writePixelFromFile(FILE, FILE*);
+void writePixelFromFile(FILE *userFile, FILE *bmp);
 
-int writeHeader(FILE, FILE*);
-void writeDIB(FILE*, int, int);
-void writeImageDataFromFile(FILE, FILE*, long);
+int writeHeader(FILE *userFile, FILE *bmp);
+void writeDIB(FILE *bmp, int width, int height);
+void writeImageDataFromFile(FILE *userFile, FILE *bmp, int userFileSize);
 
-FILE* buildBmpFromFile(char*, int, int);
+FILE* buildBmpFromFile(char *userPath, int width, int height);
 
