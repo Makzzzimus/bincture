@@ -3,5 +3,6 @@
 /.vscode
 /Bincture visualizations  
 /bin
+/cli
 
 a.out
