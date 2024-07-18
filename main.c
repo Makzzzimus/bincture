@@ -2,14 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <uchar.h>
-#include <locale.h>
 #ifdef _WIN32
     #include <windows.h>
+#elif __linux__
+    #include <locale.h>
 #endif
 
 #include "bmp.h"
 #include "cui.h"
-
 
 void askPath(char*);
 int askWidth();
@@ -21,20 +21,24 @@ int main(){
 
     #ifdef _WIN32
         SetConsoleOutputCP(CP_UTF8);
-
-        // DWORD consoleMode = 0;
+        // DWORD consoleMode = 0; //This should enable ANSI escape codes, but it breaks console
         // HANDLE std_out = GetStdHandle(STD_OUTPUT_HANDLE);
         // GetConsoleMode(std_out, &consoleMode);
-        //SetConsoleMode(std_out, consoleMode &~ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+        //SetConsoleMode(std_out, consoleMode &~ENABLE_VIRTUAL_TERMINAL_PROCESSING); 
+    #elif __linux__
+        setlocale(LC_ALL, "");
     #endif
 
-    char32_t matrix[18][85] = {
-        U"┌ Picture resolution ┐┌────────────────── Additional options ─────────────────┐",
-        U"│ ╭Width╮   ╭Height╮ ││ <1> Set picture resolution automatically -------- [y] │",
-        U"│ │     │   │      │ ││ <2> Use multi-threading to perform visualization  [y] │",
-        U"│ ╰─────╯   ╰──────╯ ││ <3> Use BGR instead of RGB ---------------------- [n] │",
-        U"│                    ││ <4> Bytes per pixels ---------------------------- [3] │",
-        U"│                    ││                                                       │",
+    char32_t matrix[MATRIX_ROWS][MATRIX_COLUMNS] = {
+        U"┌────────────────────────────────── Status ───────────────────────────────────┐",
+        U"│                                                                             │",
+        U"└─────────────────────────────────────────────────────────────────────────────┘",
+        U"┌ Picture resolution ┐┌───────────────── Additional options ──────────────────┐",
+        U"│                    ││ <1> Set picture resolution automatically -------- [y] │",
+        U"│ ╭Width╮    Height╮ ││ <2> Use multi-threading to perform visualization  [y] │",
+        U"│ │     │    │     │ ││ <3> Use BGR instead of RGB ---------------------- [n] │",
+        U"│ ╰─────╯    ╰─────╯ ││ <4> Bytes per pixels ---------------------------- [3] │",
+        U"│   <w>        <h>   ││                                                       │",
         U"│                    ││                                                       │",
         U"│                    ││                                                       │",
         U"├────── Pixels ──────┤├───────────────────── Tips & Info ─────────────────────┤",
@@ -42,26 +46,24 @@ int main(){
         U"│ ?      px          ││ proceeding. Press m to open manual.                   │",
         U"│ ?      px are lost ││                                                       │",
         U"└────────────────────┘└───────────────────────────────────────────────────────┘",
-        U"┌────────────────────────── Enter the path to a file ─────────────────────────┐",
+        U"┌─────────────────────── <p> Enter the path to a file ────────────────────────┐",
         U"│ _                                                                           │",
         U"│                                                                             │",
         U"│                                                                             │",
         U"└─────────────────────────────────────────────────────────────────────────────┘"
     };
-    //setlocale(LC_ALL, "");
 
-    //modifyMatrix(matrix, "ABSCDEF", 0, 24, 10);
-    refreshUI(matrix);
+    updateUI(matrix);
 
     askPath(path);
-    if(path[strlen(path)-1] == '\n'){
-        path[strlen(path)-1] = '\0';
-    }
+    // if(path[strlen(path)-1] == '\n'){
+    //     path[strlen(path)-1] = '\0';
+    // }
     
-    width = askWidth();
-    height = askHeight();
+    // width = askWidth();
+    // height = askHeight();
 
-    buildBmpFromFile(path, width, height);
+    // buildBmpFromFile(path, width, height);
 
     return 0;
 }
