@@ -1,7 +1,7 @@
 #include <stdbool.h>
 
 #define MATRIX_ROWS 21
-#define MATRIX_COLUMNS 81
+#define MATRIX_COLUMNS 80
 
 void updateUI(char32_t matrix[MATRIX_ROWS][MATRIX_COLUMNS]);
 

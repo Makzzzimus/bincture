@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include "bmp.h"
 #include "decfwrite.h"
 #include "os.h"
 
@@ -122,7 +123,7 @@ FILE* buildBmpFromFile(char *userPath, int width, int height){
     }
     bmpPath()*/
     
-    (OS == "windows") ? strcpy(bmpPath, ".\\Bincture visualizations\\") : strcpy(bmpPath, "./Bincture visualizations/");
+    (OS == 'w') ? strcpy(bmpPath, ".\\Bincture visualizations\\") : strcpy(bmpPath, "./Bincture visualizations/");
 
     #ifdef _WIN32
         mkdir(bmpPath);

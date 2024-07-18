@@ -3,6 +3,7 @@
 #include <string.h>
 #include <uchar.h>
 #include "cui.h"
+#include "os.h"
 
 #define CHAR_BUFFER_SIZE 4
 
@@ -18,10 +19,14 @@ void clear(){
 void updateUI(char32_t matrix[MATRIX_ROWS][MATRIX_COLUMNS]){
     curRow = 5; curColumn = 74; curLength = 3; curSet = true; //test
 
-    mbstate_t p;
     char buffer[CHAR_BUFFER_SIZE] = "\0", outputString[255] = "\0", curANSI[12] = "\0";
     char curEnd = curColumn + curLength;
     sprintf(curANSI, "\033[38;5;%dm", CURSOR_COLOR);
+
+    mbstate_t p;
+    #ifdef __linux__
+        p.__count = 0;
+    #endif
 
     clear();
 
