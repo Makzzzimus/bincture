@@ -9,7 +9,7 @@
 #endif
 
 #include "bmp.h"
-#include "cui.h"
+#include "tui.h"
 
 void askPath(char*);
 int askWidth();
