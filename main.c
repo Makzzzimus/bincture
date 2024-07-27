@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <uchar.h>
+#include "conio.h"
 #ifdef _WIN32
     #include <windows.h>
 #elif __linux__
@@ -9,7 +10,7 @@
 #endif
 
 #include "bmp.h"
-#include "tui.h"
+//#include "tui.h"
 
 void askPath(char*);
 int askWidth();
@@ -21,14 +22,15 @@ int main(){
 
     #ifdef _WIN32
         SetConsoleOutputCP(CP_UTF8);
-        // DWORD consoleMode = 0; //This should enable ANSI escape codes, but it breaks console
-        // HANDLE std_out = GetStdHandle(STD_OUTPUT_HANDLE);
-        // GetConsoleMode(std_out, &consoleMode);
+        //DWORD consoleMode = 0; //This should enable ANSI escape codes, but instead it breaks terminal output
+        //HANDLE std_out = GetStdHandle(STD_OUTPUT_HANDLE);
+        //GetConsoleMode(std_out, &consoleMode);
         //SetConsoleMode(std_out, consoleMode &~ENABLE_VIRTUAL_TERMINAL_PROCESSING); 
     #elif __linux__
         setlocale(LC_ALL, "");
     #endif
 
+    /* //TUI driver
     char32_t matrix[MATRIX_ROWS][MATRIX_COLUMNS] = {
         U"┌────────────────────────────────── Status ───────────────────────────────────┐",
         U"│                                                                             │",
@@ -55,15 +57,24 @@ int main(){
 
     updateUI(matrix);
 
-    askPath(path);
-    // if(path[strlen(path)-1] == '\n'){
-    //     path[strlen(path)-1] = '\0';
-    // }
-    
-    // width = askWidth();
-    // height = askHeight();
+    int action = c_getch();
+    switch (action){
+    case 'p':
+        setPath(matrix, path);
+        break;           
+    default:
+        break;
+    }*/
 
-    // buildBmpFromFile(path, width, height);
+    askPath(path);
+    if(path[strlen(path)-1] == '\n'){
+        path[strlen(path)-1] = '\0';
+    }
+    
+    width = askWidth();
+    height = askHeight();
+
+    buildBmpFromFile(path, width, height);
 
     return 0;
 }
