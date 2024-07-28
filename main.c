@@ -10,11 +10,12 @@
 #endif
 
 #include "bmp.h"
+#include "cli.h"
 //#include "tui.h"
 
-void askPath(char*);
-int askWidth();
-int askHeight();
+// void askPath(char*);
+// int askWidth();
+// int askHeight();
 
 int main(){
     char path[255];
@@ -22,10 +23,6 @@ int main(){
 
     #ifdef _WIN32
         SetConsoleOutputCP(CP_UTF8);
-        //DWORD consoleMode = 0; //This should enable ANSI escape codes, but instead it breaks terminal output
-        //HANDLE std_out = GetStdHandle(STD_OUTPUT_HANDLE);
-        //GetConsoleMode(std_out, &consoleMode);
-        //SetConsoleMode(std_out, consoleMode &~ENABLE_VIRTUAL_TERMINAL_PROCESSING); 
     #elif __linux__
         setlocale(LC_ALL, "");
     #endif
@@ -66,41 +63,42 @@ int main(){
         break;
     }*/
 
-    askPath(path);
-    if(path[strlen(path)-1] == '\n'){
-        path[strlen(path)-1] = '\0';
-    }
+    printHead();
+    // askPath(path);
+    // if(path[strlen(path)-1] == '\n'){
+    //     path[strlen(path)-1] = '\0';
+    // }
     
-    width = askWidth();
-    height = askHeight();
+    // width = askWidth();
+    // height = askHeight();
 
-    buildBmpFromFile(path, width, height);
+    // buildBmpFromFile(path, width, height);
 
     return 0;
 }
 
-void askPath(char *path){ //rewrite later
-    printf("\npath: ");
-    fgets(path, 255, stdin);
-    printf(path);
-}
+// void askPath(char *path){ //rewrite later
+//     printf("\npath: ");
+//     fgets(path, 255, stdin);
+//     printf(path);
+// }
 
-int askWidth(){ //rewrite later
-    char buffer[7];
-    int width = 0;
-    printf("\nwidth: ");
-    fgets(buffer, 7, stdin);
-    width = strtol(buffer, NULL, 0);
-    //printf(width);
-    return width;
-}
+// int askWidth(){ //rewrite later
+//     char buffer[7];
+//     int width = 0;
+//     printf("\nwidth: ");
+//     fgets(buffer, 7, stdin);
+//     width = strtol(buffer, NULL, 0);
+//     //printf(width);
+//     return width;
+// }
 
-int askHeight(){ //rewrite later
-    char buffer[7];
-    int height = 0;
-    printf("\nheight: ");
-    fgets(buffer, 7, stdin);
-    height = strtol(buffer, NULL, 0);
-    //printf(height);
-    return height;
-}
+// int askHeight(){ //rewrite later
+//     char buffer[7];
+//     int height = 0;
+//     printf("\nheight: ");
+//     fgets(buffer, 7, stdin);
+//     height = strtol(buffer, NULL, 0);
+//     //printf(height);
+//     return height;
+// }
