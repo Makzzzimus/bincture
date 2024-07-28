@@ -20,6 +20,7 @@
 int main(){
     char path[255];
     int width = 0, height = 0;
+    unsigned int userFileSize = 0;
 
     #ifdef _WIN32
         SetConsoleOutputCP(CP_UTF8);
@@ -63,7 +64,7 @@ int main(){
         break;
     }*/
 
-    printHead();
+    userFileSize = askPath(path);
     // askPath(path);
     // if(path[strlen(path)-1] == '\n'){
     //     path[strlen(path)-1] = '\0';
@@ -72,7 +73,7 @@ int main(){
     // width = askWidth();
     // height = askHeight();
 
-    // buildBmpFromFile(path, width, height);
+    // buildBmpFromFile(path, width, height, userFileSize);
 
     return 0;
 }

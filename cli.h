@@ -1,15 +1,10 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-
-
+void printError(int8_t errorCode);
 void printHead();
 
-
-void askPath(char *path);
-
+unsigned int askPath(char *path);
 int8_t askBytesPerPixel();
-
-void askSize(int *width, int *height, int fileSize, uint8_t bytesPerPixel);
-
+void askSize(int *width, int *height, int fileSize, int8_t bytesPerPixel);
 bool askThreading();

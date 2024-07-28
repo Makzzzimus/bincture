@@ -21,6 +21,16 @@
 // Variables prefixed with [user] refer to the user file
 // Variables prefixed with [bmp] refer to the visualization file
 
+
+unsigned int getFileSize(FILE *userFile){
+    unsigned int userFileSize = 0;
+
+    fseek(userFile, 0, SEEK_END); //Get user's file size
+    userFileSize = ftell(userFile);
+
+    return userFileSize;
+}
+
 void getFileName(char* path, char* fileName){
     for (int i = strlen(path); i > 0; i--){ //Find file name
         if(path[i] == '\\' || path[i] == '/'){
@@ -48,22 +58,14 @@ void writePixelFromFile(FILE *userFile, FILE *bmp, int processedPixels){
 }
 
 
-int writeHeader(FILE *userFile, FILE *bmp){
-    unsigned int userFileSize = 0;
-
-    fseek(userFile, 0, SEEK_END); //Get user's file size
-    userFileSize = ftell(userFile);
-    rewind(userFile);
-
+void writeHeader(FILE *userFile, FILE *bmp, unsigned int userFileSize){
     fputs("BM", bmp); //Write BM letters to specify the file format
 
     fwrite32le(bmp, userFileSize); 
 
     fwrite32le(bmp, 0); //Write reserved empty bytes
 
-    fwrite32le(bmp, OFFSET_TO_IMAGE_DATA); 
-
-    return userFileSize;
+    fwrite32le(bmp, OFFSET_TO_IMAGE_DATA);
 }
 
 void writeDIB(FILE *bmp, int width, int height){
@@ -100,9 +102,8 @@ void writeImageDataFromFile(FILE *userFile, FILE *bmp, int userFileSize){
 }
 
 
-FILE* buildBmpFromFile(char *userPath, int width, int height){
+FILE* buildBmpFromFile(char *userPath, int width, int height, unsigned int userFileSize){
     char userFileName[256] = "\0", bmpPath[256] = "\0";
-    unsigned int userFileSize = 0;
     
     FILE *userFile = fopen(userPath, "r");
     if (userFile == NULL){
@@ -137,7 +138,7 @@ FILE* buildBmpFromFile(char *userPath, int width, int height){
 
     FILE *bmp = fopen(bmpPath, "wb"); 
 
-    userFileSize = writeHeader(userFile, bmp);
+    writeHeader(userFile, bmp, userFileSize);
 
     writeDIB(bmp, width, height);
 
