@@ -99,7 +99,7 @@ int8_t askBytesPerPixel(){
     puts(BPP_TIP);
     printf(ASK_BPP_PROMPT);
 
-    int8_t bytesPerPixel = c_getch() - 48;
+    uint8_t bytesPerPixel = c_getch() - 48;
 
     if (bytesPerPixel == 0 || bytesPerPixel > 3){
         lastError = 3;
