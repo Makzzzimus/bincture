@@ -69,8 +69,8 @@ unsigned int askPath(char *path){
 
         path[0] = '\0';
         fclose(userFile);
-        askPath(path);
-        return 0;
+        userFileSize = askPath(path);
+        return userFileSize;
     }
 
     userFileSize = getFileSize(userFile);
@@ -79,8 +79,8 @@ unsigned int askPath(char *path){
 
         path[0] = '\0';
         fclose(userFile);
-        askPath(path);
-        return 0;
+        userFileSize = askPath(path);
+        return userFileSize;
     }
 
     fclose(userFile);

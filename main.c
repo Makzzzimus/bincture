@@ -65,10 +65,6 @@ int main(){
     }*/
 
     userFileSize = askPath(path);
-    // askPath(path);
-    // if(path[strlen(path)-1] == '\n'){
-    //     path[strlen(path)-1] = '\0';
-    // }
     
     // width = askWidth();
     // height = askHeight();
