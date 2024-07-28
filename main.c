@@ -21,6 +21,7 @@ int main(){
     char path[255];
     int width = 0, height = 0;
     unsigned int userFileSize = 0;
+    uint8_t bytesPerPixel = 0;
 
     #ifdef _WIN32
         SetConsoleOutputCP(CP_UTF8);
@@ -65,7 +66,8 @@ int main(){
     }*/
 
     userFileSize = askPath(path);
-    
+
+    bytesPerPixel = askBytesPerPixel();
     // width = askWidth();
     // height = askHeight();
 
