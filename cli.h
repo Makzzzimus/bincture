@@ -4,6 +4,7 @@
 void fgetw(char *buffer, uint8_t maxLength, FILE *file); // Get word from file
 
 void printError(int8_t errorCode);
+void printTip(char *string);
 void printHead();
 
 unsigned int askPath(char *path);

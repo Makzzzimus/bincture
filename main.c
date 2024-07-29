@@ -64,6 +64,7 @@ int main(){
     default:
         break;
     }*/
+    c_textcolor(WHITE);
 
     userFileSize = askPath(path);
 
