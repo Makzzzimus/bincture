@@ -1,6 +1,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+void fgetw(char *buffer, uint8_t maxLength, FILE *file); // Get word from file
+
 void printError(int8_t errorCode);
 void printHead();
 

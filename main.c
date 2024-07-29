@@ -68,6 +68,8 @@ int main(){
     userFileSize = askPath(path);
 
     bytesPerPixel = askBytesPerPixel();
+
+    askSize(&width, &height, userFileSize, bytesPerPixel);
     // width = askWidth();
     // height = askHeight();
 
