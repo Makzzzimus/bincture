@@ -18,12 +18,12 @@
 #define ASK_BPP_PROMPT "Enter the number of bytes per pixel [1, 2, 3]: "
 #define ASK_SIZE_PROMPT "Enter the size of visualization in following format {Width} {Height} (Both must be <100000). Both variables must be dividable by 4: "
 
-#define INVALID_FILE_ERROR "Error: Invalid file path provided!" //Error code 1
-#define LARGE_FILE_ERROR "Error: File is too large or empty! File must be smaller than 4 GB" //Error code 2
-#define INVALID_BPP_ERROR "Error: Enter only numbers ranging from 1 to 3!" //Error code 3
-#define NEGATIVE_SIZE_ERROR "Error: Enter only numbers greater than 0!" //Error code 4
-#define UNDIVIDABLE_SIZE_ERROR "Error: Both width and height values must be dividable by 4!" //Error code 5
-#define LARGE_SIZE_ERROR "Error: Visualization can't handle more than 4,294,967,295 bytes!" //Error code 6
+#define INVALID_FILE_ERROR "Error: Invalid file path provided!\n" //Error code 1
+#define LARGE_FILE_ERROR "Error: File is too large or empty! File must be smaller than 4 GB\n" //Error code 2
+#define INVALID_BPP_ERROR "Error: Enter only numbers ranging from 1 to 3!\n" //Error code 3
+#define NEGATIVE_SIZE_ERROR "Error: Enter only numbers greater than 0!\n" //Error code 4
+#define UNDIVIDABLE_SIZE_ERROR "Error: Both width and height values must be dividable by 4!\n" //Error code 5
+#define LARGE_SIZE_ERROR "Error: Visualization can't handle more than 4,294,967,295 bytes!\n" //Error code 6
 
 int8_t lastError = 0;
 
