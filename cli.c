@@ -107,8 +107,9 @@ unsigned int askPath(char *path){
     printf(ASK_PATH_PROMPT);
 
     fgets(path, 255, stdin);
+
     //Delete quote signs if user dragged n dropped a file into terminal window
-    if (path[0] == '"' || path[0] == '\'')  {path = (path + 1);} 
+    if (path[0] == '"' || path[0] == '\'')  {memmove(path, path + 1, strlen(path));} 
     for (uint8_t i = 0; i < 2; i++){
         if (path[strlen(path)-1] == '\n' || path[strlen(path)-1] == '"' || path[strlen(path)-1] == '\'')  {path[strlen(path)-1] = '\0';}
     }

@@ -10,7 +10,6 @@
 
 #define DIB_SIZE 40                       //Always 40
 #define COLOR_PLANES 1                    //Always 1
-#define BITS_PER_PIXEL 24                 //True color picture (Transparency isn't supported)
 #define COMPRESSION_METHOD 0              //None
 #define IMAGE_SIZE 0                      //Needed only if compression method is used
 #define HORIZONTAL_PIXELS_PER_METER 1800  // =~ 45 ppi. Used for printing
@@ -44,16 +43,18 @@ void getFileName(char* path, char* fileName){
     }
 }
 
-void writePixelFromFile(FILE *userFile, FILE *bmp, int processedPixels){
+void writePixelFromFile(FILE *userFile, FILE *bmp, int processedPixels, uint8_t bytesPerPixel){
     char pixel[4] = "\0";
     fseek(userFile, 54 + processedPixels, SEEK_SET);
-    for (int i = 0; i < 3; i++){
+    for (int i = 0; i < bytesPerPixel; i++){
         fseek(userFile, i, SEEK_CUR);
         pixel[i] = fgetc(userFile);
     }
-    swapc(&pixel[0], &pixel[2]);
-
-    fwrite(pixel, sizeof(char), 3, bmp);
+    if (bytesPerPixel > 1){
+        swapc(&pixel[0], &pixel[bytesPerPixel - 1]);
+    }
+    
+    fwrite(pixel, sizeof(char), bytesPerPixel, bmp);
     return;
 }
 
@@ -68,14 +69,14 @@ void writeHeader(FILE *userFile, FILE *bmp, unsigned int userFileSize){
     fwrite32le(bmp, OFFSET_TO_IMAGE_DATA);
 }
 
-void writeDIB(FILE *bmp, int width, int height){
+void writeDIB(FILE *bmp, int width, int height, uint8_t bytesPerPixel){
     fwrite32le(bmp, DIB_SIZE);
 
     fwrite32le(bmp, width);
     fwrite32le(bmp, height);
 
     fwrite16le(bmp, COLOR_PLANES);
-    fwrite16le(bmp, BITS_PER_PIXEL);
+    fwrite16le(bmp, bytesPerPixel * 8);
 
     fwrite32le(bmp, COMPRESSION_METHOD);
     fwrite32le(bmp, IMAGE_SIZE);
@@ -89,20 +90,20 @@ void writeDIB(FILE *bmp, int width, int height){
     return;
 }
 
-void writeImageDataFromFile(FILE *userFile, FILE *bmp, int userFileSize){
+void writeImageDataFromFile(FILE *userFile, FILE *bmp, int userFileSize, uint8_t bytesPerPixel){
     int unusedPixels = 0;
 
-    if((userFileSize - unusedPixels) % 3 != 0){
-        unusedPixels = userFileSize % 3;
+    if((userFileSize - unusedPixels) % bytesPerPixel != 0){
+        unusedPixels = userFileSize % bytesPerPixel;
     }
 
-    for (unsigned int processedPixels = 0; processedPixels < userFileSize - unusedPixels; processedPixels += 3){
-        writePixelFromFile(userFile, bmp, processedPixels);
+    for (uint32_t processedPixels = 0; processedPixels < userFileSize - unusedPixels; processedPixels += bytesPerPixel){
+        writePixelFromFile(userFile, bmp, processedPixels, bytesPerPixel);
     }
 }
 
 
-FILE* buildBmpFromFile(char *userPath, int width, int height, unsigned int userFileSize){
+void buildBmpFromFile(char *userPath, int width, int height, unsigned int userFileSize, uint8_t bytesPerPixel){
     char userFileName[256] = "\0", bmpPath[256] = "\0";
     
     FILE *userFile = fopen(userPath, "r");
@@ -140,9 +141,11 @@ FILE* buildBmpFromFile(char *userPath, int width, int height, unsigned int userF
 
     writeHeader(userFile, bmp, userFileSize);
 
-    writeDIB(bmp, width, height);
+    writeDIB(bmp, width, height, bytesPerPixel);
 
-    writeImageDataFromFile(userFile, bmp, userFileSize);
+    writeImageDataFromFile(userFile, bmp, userFileSize, bytesPerPixel);
 
     fclose(bmp);
+
+    return;
 }
