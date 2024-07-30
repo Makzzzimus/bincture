@@ -9,5 +9,5 @@ void printHead();
 
 unsigned int askPath(char *path);
 int8_t askBytesPerPixel();
-void askSize(int *width, int *height, int fileSize, int8_t bytesPerPixel);
+void askSize(int *width, int *height, int fileSize, int *lostPixels, int8_t bytesPerPixel);
 bool askThreading();

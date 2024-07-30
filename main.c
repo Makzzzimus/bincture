@@ -19,8 +19,8 @@
 
 int main(){
     char path[255];
-    int width = 0, height = 0;
-    unsigned int userFileSize = 0;
+    signed int lostPixels = 0;
+    unsigned int userFileSize = 0, width = 0, height = 0;
     uint8_t bytesPerPixel = 0;
 
     #ifdef _WIN32
@@ -70,9 +70,9 @@ int main(){
 
     bytesPerPixel = askBytesPerPixel();
 
-    askSize(&width, &height, userFileSize, bytesPerPixel);
+    askSize(&width, &height, userFileSize, &lostPixels, bytesPerPixel);
 
-    buildBmpFromFile(path, width, height, userFileSize, bytesPerPixel);
+    buildBmpFromFile(path, width, height, userFileSize, lostPixels, bytesPerPixel);
 
     return 0;
 }

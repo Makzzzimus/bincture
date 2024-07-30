@@ -153,22 +153,21 @@ int8_t askBytesPerPixel(){
     return bytesPerPixel;
 }
 
-void askSize(int *width, int *height, int fileSize, int8_t bytesPerPixel){
+void askSize(int *width, int *height, int fileSize, int *lostPixels, int8_t bytesPerPixel){
     int totalPixels = fileSize / bytesPerPixel;
-    int lostPixels = 0;
     char widthBuffer[6] = "\0", heightBuffer[6] = "\0";
 
     *width = *height = (int) floor(sqrt(totalPixels));
     if (*width % 4){
         *height = *width += 4 - (*width % 4);
     }
-    lostPixels = totalPixels - *width * *height;
+    *lostPixels = totalPixels - *width * *height;
 
     printHead();
 
     char finalTip[255] = "\0", tipBody[255] = "\0";
     strcat(finalTip, SIZE_TIP);
-    sprintf(tipBody, "%d pixels. The recommended size of visualization for this file is %dx%d. In this case, %d pixels will be lost (If this value is negative, additional empty black pixels will be added to visualization.)\n\n", totalPixels, *width, *height, lostPixels);
+    sprintf(tipBody, "%d pixels. The recommended size of visualization for this file is %dx%d. In this case, %d pixels will be lost (If this value is negative, additional empty black pixels will be added to visualization.)\n\n", totalPixels, *width, *height, *lostPixels);
     strcat(finalTip, tipBody);
     printTip(finalTip);
 
@@ -183,29 +182,29 @@ void askSize(int *width, int *height, int fileSize, int8_t bytesPerPixel){
     if (*width <= 0 || *height <= 0){
         lastError = 4;
         fflush(stdin);
-        askSize(width, height, fileSize, bytesPerPixel);
+        askSize(width, height, fileSize, lostPixels, bytesPerPixel);
         return;
     }
     if (*width % 4 || *height % 4){
         lastError = 5;
         fflush(stdin);
-        askSize(width, height, fileSize, bytesPerPixel);
+        askSize(width, height, fileSize, lostPixels, bytesPerPixel);
         return;
     }
     uint64_t bytes = (uint64_t)(*width) * (*height) * bytesPerPixel;
     if (bytes > UINT32_MAX){
         lastError = 6;
         fflush(stdin);
-        askSize(width, height, fileSize, bytesPerPixel);
+        askSize(width, height, fileSize, lostPixels, bytesPerPixel);
         return;
     }
 
-    lostPixels = totalPixels - *width * *height;
-    printf("Visualization size will be %dx%d. In this case, %d pixels will be lost \nContinue with this size? [Y/n]: ", *width, *height, lostPixels);
+    *lostPixels = totalPixels - *width * *height;
+    printf("Visualization size will be %dx%d. In this case, %d pixels will be lost \nContinue with this size? [Y/n]: ", *width, *height, *lostPixels);
     char action = c_getch();
     if (action == 'n'){
         fflush(stdin);
-        askSize(width, height, fileSize, bytesPerPixel);
+        askSize(width, height, fileSize, lostPixels, bytesPerPixel);
     }
     return;
 }

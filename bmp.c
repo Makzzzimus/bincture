@@ -12,8 +12,8 @@
 #define COLOR_PLANES 1                    //Always 1
 #define COMPRESSION_METHOD 0              //None
 #define IMAGE_SIZE 0                      //Needed only if compression method is used
-#define HORIZONTAL_PIXELS_PER_METER 1800  // =~ 45 ppi. Used for printing
-#define VERTICAL_PIXELS_PER_METER 1800    // =~ 45 ppi. Used for printing
+#define HORIZONTAL_PIXELS_PER_METER 0     //Used for printing
+#define VERTICAL_PIXELS_PER_METER 0       //Used for printing
 #define NUMBER_OF_COLORS 0                //Default value
 #define NUMBER_OF_IMPORTANT_COLORS 0      //Every color is important
 
@@ -43,26 +43,25 @@ void getFileName(char* path, char* fileName){
     }
 }
 
-void writePixelFromFile(FILE *userFile, FILE *bmp, int processedPixels, uint8_t bytesPerPixel){
-    char pixel[4] = "\0";
-    fseek(userFile, 54 + processedPixels, SEEK_SET);
+void writePixelFromFile(FILE *userFile, FILE *bmp, int processedBytes, uint8_t bytesPerPixel){
+    unsigned char pixel[4] = "\0";
     for (int i = 0; i < bytesPerPixel; i++){
-        fseek(userFile, i, SEEK_CUR);
+        fseek(userFile, processedBytes + i, SEEK_SET);
         pixel[i] = fgetc(userFile);
     }
-    if (bytesPerPixel > 1){
-        swapc(&pixel[0], &pixel[bytesPerPixel - 1]);
-    }
+    // if (bytesPerPixel > 1){
+    //     swapc(&pixel[0], &pixel[bytesPerPixel - 1]);
+    // }
     
     fwrite(pixel, sizeof(char), bytesPerPixel, bmp);
     return;
 }
 
 
-void writeHeader(FILE *userFile, FILE *bmp, unsigned int userFileSize){
+void writeHeader(FILE *userFile, FILE *bmp, unsigned int userFileSize, int lostPixels, uint8_t bytesPerPixel){
     fputs("BM", bmp); //Write BM letters to specify the file format
 
-    fwrite32le(bmp, userFileSize); 
+    fwrite32le(bmp, userFileSize - lostPixels * bytesPerPixel + OFFSET_TO_IMAGE_DATA); 
 
     fwrite32le(bmp, 0); //Write reserved empty bytes
 
@@ -90,20 +89,20 @@ void writeDIB(FILE *bmp, int width, int height, uint8_t bytesPerPixel){
     return;
 }
 
-void writeImageDataFromFile(FILE *userFile, FILE *bmp, int userFileSize, uint8_t bytesPerPixel){
-    int unusedPixels = 0;
+void writeImageDataFromFile(FILE *userFile, FILE *bmp, int userFileSize, int lostPixels, uint8_t bytesPerPixel){
+    int ignoredBytes = 0;
 
-    if((userFileSize - unusedPixels) % bytesPerPixel != 0){
-        unusedPixels = userFileSize % bytesPerPixel;
+    if((userFileSize - ignoredBytes) % bytesPerPixel != 0){
+        ignoredBytes = userFileSize % bytesPerPixel;
     }
 
-    for (uint32_t processedPixels = 0; processedPixels < userFileSize - unusedPixels; processedPixels += bytesPerPixel){
-        writePixelFromFile(userFile, bmp, processedPixels, bytesPerPixel);
+    for (uint32_t processedBytes = 0; processedBytes < userFileSize - lostPixels * bytesPerPixel - ignoredBytes; processedBytes += bytesPerPixel){
+        writePixelFromFile(userFile, bmp, processedBytes, bytesPerPixel);
     }
 }
 
 
-void buildBmpFromFile(char *userPath, int width, int height, unsigned int userFileSize, uint8_t bytesPerPixel){
+void buildBmpFromFile(char *userPath, int width, int height, unsigned int userFileSize, int lostPixels, uint8_t bytesPerPixel){
     char userFileName[256] = "\0", bmpPath[256] = "\0";
     
     FILE *userFile = fopen(userPath, "r");
@@ -111,22 +110,8 @@ void buildBmpFromFile(char *userPath, int width, int height, unsigned int userFi
         puts("Enter the valid path to a file");
         exit(EXIT_FAILURE);
     }
-    /*if (OS == "windows"){
-        
-    }
-    else if (OS == "linux") {
-        sprintf(bmpPath, "%s/Pictures/Bincture visualizations", getenv("HOME"));
-    }
-    else if (OS == "mac"){
-        
-    }
-    else{
-        puts("Your system is unsupported");
-    }
-    bmpPath()*/
-    
-    (OS == 'w') ? strcpy(bmpPath, ".\\Bincture visualizations\\") : strcpy(bmpPath, "./Bincture visualizations/");
 
+    (OS == 'w') ? strcpy(bmpPath, ".\\Bincture visualizations\\") : strcpy(bmpPath, "./Bincture visualizations/");
     #ifdef _WIN32
         mkdir(bmpPath);
     #else
@@ -139,11 +124,11 @@ void buildBmpFromFile(char *userPath, int width, int height, unsigned int userFi
 
     FILE *bmp = fopen(bmpPath, "wb"); 
 
-    writeHeader(userFile, bmp, userFileSize);
+    writeHeader(userFile, bmp, userFileSize, lostPixels, bytesPerPixel);
 
     writeDIB(bmp, width, height, bytesPerPixel);
 
-    writeImageDataFromFile(userFile, bmp, userFileSize, bytesPerPixel);
+    writeImageDataFromFile(userFile, bmp, userFileSize, lostPixels, bytesPerPixel);
 
     fclose(bmp);
 
