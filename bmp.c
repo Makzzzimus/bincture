@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+
 #include "bmp.h"
 #include "decfwrite.h"
 #include "os.h"
+#include "cli.h"
 
 #define OFFSET_TO_IMAGE_DATA 54           //dec 54 = hex = 36
 
@@ -107,7 +109,7 @@ void buildBmpFromFile(char *userPath, int width, int height, unsigned int userFi
     
     FILE *userFile = fopen(userPath, "r");
     if (userFile == NULL){
-        puts("Enter the valid path to a file");
+        printError(-1);
         exit(EXIT_FAILURE);
     }
 

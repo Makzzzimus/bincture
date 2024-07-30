@@ -7,31 +7,27 @@
 #include "conio.h"
 #include "cli.h"
 
-#define HEADER_WIDTH 81
-#define HEADER_HEIGHT 2 // Change later
+#define HEADER "=========================[ Welcome to Bincture v0.1! ]=========================\n"
 
 #define PATH_TIP "Drag & drop file into the terminal window to quickly insert the path to it.\n"
-#define BPP_TIP  "The bytes per pixel value specifies the color depth and affects the number of pixels in visualization.\n"
+#define BPP_TIP  "The bytes per pixel value specifies the color depth and affects the number of pixels in visualization. (Most modern images use 3 Bpp)\n"
 #define SIZE_TIP  "The visualization will contain "
 
 #define ASK_PATH_PROMPT "Enter the path to the destination file: "
 #define ASK_BPP_PROMPT "Enter the number of bytes per pixel [1, 2, 3]: "
 #define ASK_SIZE_PROMPT "Enter the size of visualization in following format {Width} {Height} (Both must be <100000). Both variables must be dividable by 4: "
 
-#define INVALID_FILE_ERROR "Invalid file path provided!\n" //Error code 1
-#define LARGE_FILE_ERROR "File is too large or empty! File must be smaller than 4 GB\n" //Error code 2
-#define INVALID_BPP_ERROR "Enter only numbers ranging from 1 to 3!\n" //Error code 3
-#define NEGATIVE_SIZE_ERROR "Enter only numbers greater than 0!\n" //Error code 4
-#define UNDIVIDABLE_SIZE_ERROR "Both width and height values must be dividable by 4!\n" //Error code 5
-#define LARGE_SIZE_ERROR "Visualization can't handle more than 4,294,967,295 bytes!\n" //Error code 6
+//Positive error codes refer to errors in CLI input, while negative errors in runtime
+#define INVALID_FILE_ERROR "Invalid file path provided!\n"                                  //Error code 1
+#define LARGE_FILE_ERROR "File is too large or empty! File must be smaller than 4 GB\n"     //Error code 2
+#define INVALID_BPP_ERROR "Enter only numbers ranging from 1 to 3!\n"                       //Error code 3
+#define NEGATIVE_SIZE_ERROR "Enter only numbers greater than 0!\n"                          //Error code 4
+#define UNDIVIDABLE_SIZE_ERROR "Both width and height values must be dividable by 4!\n"     //Error code 5
+#define LARGE_SIZE_ERROR "Visualization can't handle more than 4,294,967,295 bytes!\n"      //Error code 6
+
+#define NO_ACCESS_ERROR "The given file doesn't exist anymore or can't be accessed\n"       //Error code -1
 
 int8_t lastError = 0;
-
-const char head[HEADER_HEIGHT][HEADER_WIDTH] = {
-    "Logo is under development",
-    "=========================[ Welcome to Bincture v0.1! ]=========================\n"
-};
-
 
 void fgetw(char *buffer, uint8_t maxLength, FILE *file){
     char temp;
@@ -69,6 +65,10 @@ void printError(int8_t errorCode){
             break; 
         case 6:
             puts(LARGE_SIZE_ERROR);
+            break;
+
+        case -1:
+            puts(NO_ACCESS_ERROR);
             break;    
     }
     c_textcolor(WHITE);
@@ -87,9 +87,7 @@ void printTip(char *string){
 void printHead(){
     c_clrscr();
 
-    for (int8_t i = 0; i < HEADER_HEIGHT; i++){
-        puts(head[i]);
-    }
+    puts(HEADER);
 
     if (lastError != 0){
         printError(lastError);
