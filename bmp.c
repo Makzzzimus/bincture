@@ -94,6 +94,23 @@ void writeDIB(FILE *bmp, int width, int height, uint8_t bytesPerPixel){
     return;
 }
 
+void writePallette(FILE *bmp){
+    FILE *pallette = fopen("./pallette.txt", "r");
+    if (pallette == NULL){
+        printError(-3);
+        c_getch();
+        exit(EXIT_FAILURE);
+    }
+
+    for(int i = 0; i < KILOBYTE_SIZE; i++){
+        char buffer[4] = "\0";
+        fgetw(buffer, 3, pallette);
+        unsigned char byte = strtol(buffer, NULL, 0);
+        fwrite(&byte, 1, 1, bmp);
+    }
+    fclose(pallette);
+}
+
 void writeImageDataFromFile(FILE *userFile, FILE *bmp, unsigned int userFileSize, int lostPixels, uint8_t bytesPerPixel){
     int ignoredBytes = 0;
     uint16_t progressPrintCooldown = 0;
@@ -147,6 +164,10 @@ void buildBmpFromFile(char *userPath, int width, int height, unsigned int userFi
     writeHeader(userFile, bmp, userFileSize, lostPixels, bytesPerPixel);
 
     writeDIB(bmp, width, height, bytesPerPixel);
+
+    if (bytesPerPixel == 1){
+        writePallette(bmp);
+    }
 
     writeImageDataFromFile(userFile, bmp, userFileSize, lostPixels, bytesPerPixel);
 

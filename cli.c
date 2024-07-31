@@ -30,9 +30,11 @@
 #define NEGATIVE_SIZE_ERROR "Enter only numbers greater than 0!\n"                          //Error code 4
 #define UNDIVIDABLE_SIZE_ERROR "Both width and height values must be dividable by 4!\n"     //Error code 5
 #define LARGE_SIZE_ERROR "Visualization can't handle more than 4,294,967,295 bytes!\n"      //Error code 6
+#define NO_PALLETTE_ERROR "The pallette.txt file doesn't exist. This file is required to generate 8-bit images. It contains all colors of the image. Download it at github.com/Makzzzimus/bincture/blob/main/pallette.txt or create your own." //Error code 7
 
-#define NO_LONGER_EXISTS_ERROR "The given file doesn't exist anymore or can't be accessed\n"                             //Error code -1
-#define CANT_MODIFY_ERROR "Bincture doesn't have enough privilege level to create and modify files in this directory.\n" //Error code -2
+#define NO_LONGER_EXISTS_ERROR "\nThe given file doesn't exist anymore or can't be accessed\n"                             //Error code -1
+#define CANT_MODIFY_ERROR "\nBincture doesn't have enough privilege level to create and modify files in this directory.\n" //Error code -2
+#define MOVED_PALLETTE_ERROR "\nThe pallette.txt file was moved or deleted and can't be accessed"
 
 int8_t lastError = 0;
 
@@ -73,13 +75,19 @@ void printError(int8_t errorCode){
         case 6:
             puts(LARGE_SIZE_ERROR);
             break;
+        case 7:
+            puts(NO_PALLETTE_ERROR);
+            break;
 
         case -1:
             puts(NO_LONGER_EXISTS_ERROR);
             break;
         case -2:
             puts(CANT_MODIFY_ERROR);
-            break;    
+            break;  
+        case -3:
+            puts(MOVED_PALLETTE_ERROR);
+            break;  
     }
     c_textcolor(WHITE);
     return;
@@ -157,6 +165,14 @@ int8_t askBytesPerPixel(){
     if (bytesPerPixel == 0 || bytesPerPixel > 3){
         lastError = 3;
         bytesPerPixel = askBytesPerPixel();
+    }
+    if (bytesPerPixel == 1){
+        FILE *pallette = fopen("./pallette.txt", "r");
+        if (pallette == NULL){
+            lastError = 7;
+            bytesPerPixel = askBytesPerPixel();
+        }
+        fclose(pallette);
     }
     return bytesPerPixel;
 }
