@@ -3,9 +3,11 @@
 #include <string.h>
 #include <math.h>
 
-#include "bmp.h"
 #include "conio.h"
+#include "bmp.h"
 #include "cli.h"
+
+#define MEGABYTE_SIZE 1048576.0F
 
 #define HEADER "=========================[ Welcome to Bincture v0.1! ]=========================\n"
 
@@ -16,6 +18,10 @@
 #define ASK_PATH_PROMPT "Enter the path to the destination file: "
 #define ASK_BPP_PROMPT "Enter the number of bytes per pixel [1, 2, 3]: "
 #define ASK_SIZE_PROMPT "Enter the size of visualization in following format {Width} {Height} (Both must be <100000). Both variables must be dividable by 4: "
+#define ASK_EXIT_PROMPT "\nPress any key to exit the application..."
+
+#define WAIT_WHILE_VISUALIZATION "The process of visualization may take a while to complete..."
+#define SUCCESS_VISUALIZATION "The process of visualization has successfully finished. File was saved in current directory in the folder \"Bincture visualizations\""
 
 //Positive error codes refer to errors in CLI input, while negative errors in runtime
 #define INVALID_FILE_ERROR "Invalid file path provided!\n"                                  //Error code 1
@@ -165,7 +171,7 @@ void askSize(int *width, int *height, int fileSize, int *lostPixels, int8_t byte
 
     char finalTip[255] = "\0", tipBody[255] = "\0";
     strcat(finalTip, SIZE_TIP);
-    sprintf(tipBody, "%d pixels. The recommended size of visualization for this file is %dx%d. In this case, %d pixels will be lost (If this value is negative, additional empty black pixels will be added to visualization.)\n\n", totalPixels, *width, *height, *lostPixels);
+    sprintf(tipBody, "%d pixels. The recommended size of visualization for this file is %dx%d. In this case, %d pixels will be lost (If this value is negative, additional white pixels will be added to start of visualization.)\n\n", totalPixels, *width, *height, *lostPixels);
     strcat(finalTip, tipBody);
     printTip(finalTip);
 
@@ -205,4 +211,30 @@ void askSize(int *width, int *height, int fileSize, int *lostPixels, int8_t byte
         askSize(width, height, fileSize, lostPixels, bytesPerPixel);
     }
     return;
+}
+
+void askExit(){
+    printHead();
+
+    c_textcolor(GREEN);
+    puts(SUCCESS_VISUALIZATION);
+    c_textcolor(WHITE);
+
+    puts(ASK_EXIT_PROMPT);
+    c_getch();
+    exit(EXIT_SUCCESS);
+}
+
+void printProgress(int totalBytes, int processedBytes){
+    printHead();
+
+    char progressBarFill[26] = ".........................";
+    float totalMBytes =  (float)totalBytes / MEGABYTE_SIZE, processedMBytes = (float)processedBytes / MEGABYTE_SIZE,
+    percents = processedMBytes / (totalMBytes / 100);
+
+    for(int i = 0; i < percents / 4; i++){
+        progressBarFill[i] = '#';
+    }
+    puts(WAIT_WHILE_VISUALIZATION);
+    printf("Visualizing [%s] %.1f MB / %.1f MB | %.1f %%\n", progressBarFill, processedMBytes, totalMBytes, percents);
 }

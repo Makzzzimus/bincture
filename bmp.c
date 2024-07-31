@@ -19,6 +19,8 @@
 #define NUMBER_OF_COLORS 0                //Default value
 #define NUMBER_OF_IMPORTANT_COLORS 0      //Every color is important
 
+#define KILOBYTE_SIZE 1024
+
 // Variables prefixed with [user] refer to the user file
 // Variables prefixed with [bmp] refer to the visualization file
 
@@ -91,8 +93,9 @@ void writeDIB(FILE *bmp, int width, int height, uint8_t bytesPerPixel){
     return;
 }
 
-void writeImageDataFromFile(FILE *userFile, FILE *bmp, int userFileSize, int lostPixels, uint8_t bytesPerPixel){
+void writeImageDataFromFile(FILE *userFile, FILE *bmp, unsigned int userFileSize, int lostPixels, uint8_t bytesPerPixel){
     int ignoredBytes = 0;
+    uint16_t progressPrintCooldown = 0;
 
     if((userFileSize - ignoredBytes) % bytesPerPixel != 0){
         ignoredBytes = userFileSize % bytesPerPixel;
@@ -100,6 +103,14 @@ void writeImageDataFromFile(FILE *userFile, FILE *bmp, int userFileSize, int los
 
     for (uint32_t processedBytes = 0; processedBytes < userFileSize - lostPixels * bytesPerPixel - ignoredBytes; processedBytes += bytesPerPixel){
         writePixelFromFile(userFile, bmp, processedBytes, bytesPerPixel);
+
+        if (progressPrintCooldown == KILOBYTE_SIZE * 25){
+            printProgress(userFileSize - lostPixels * bytesPerPixel - ignoredBytes, processedBytes);
+            progressPrintCooldown = 0;
+        }
+        else{
+            progressPrintCooldown++;
+        }
     }
 }
 

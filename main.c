@@ -1,21 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <uchar.h>
-#include "conio.h"
+
 #ifdef _WIN32
     #include <windows.h>
 #elif __linux__
     #include <locale.h>
 #endif
 
+#include "conio.h"
 #include "bmp.h"
 #include "cli.h"
 //#include "tui.h"
-
-// void askPath(char*);
-// int askWidth();
-// int askHeight();
 
 int main(){
     char path[255];
@@ -73,6 +69,8 @@ int main(){
     askSize(&width, &height, userFileSize, &lostPixels, bytesPerPixel);
 
     buildBmpFromFile(path, width, height, userFileSize, lostPixels, bytesPerPixel);
+
+    askExit();
 
     return 0;
 }
