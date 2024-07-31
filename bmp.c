@@ -3,6 +3,7 @@
 #include <string.h>
 #include <sys/stat.h>
 
+#include "conio.h"
 #include "bmp.h"
 #include "decfwrite.h"
 #include "os.h"
@@ -121,6 +122,7 @@ void buildBmpFromFile(char *userPath, int width, int height, unsigned int userFi
     FILE *userFile = fopen(userPath, "r");
     if (userFile == NULL){
         printError(-1);
+        c_getch();
         exit(EXIT_FAILURE);
     }
 
@@ -135,7 +137,12 @@ void buildBmpFromFile(char *userPath, int width, int height, unsigned int userFi
     strncat(bmpPath, userFileName, strlen(userFileName));
     strcat(bmpPath, ".bmp");
 
-    FILE *bmp = fopen(bmpPath, "wb"); 
+    FILE *bmp = fopen(bmpPath, "wb");
+    if (bmp == NULL){
+        printError(-2);
+        c_getch();
+        exit(EXIT_FAILURE);
+    }
 
     writeHeader(userFile, bmp, userFileSize, lostPixels, bytesPerPixel);
 

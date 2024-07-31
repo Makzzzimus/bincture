@@ -31,7 +31,8 @@
 #define UNDIVIDABLE_SIZE_ERROR "Both width and height values must be dividable by 4!\n"     //Error code 5
 #define LARGE_SIZE_ERROR "Visualization can't handle more than 4,294,967,295 bytes!\n"      //Error code 6
 
-#define NO_ACCESS_ERROR "The given file doesn't exist anymore or can't be accessed\n"       //Error code -1
+#define NO_LONGER_EXISTS_ERROR "The given file doesn't exist anymore or can't be accessed\n"                             //Error code -1
+#define CANT_MODIFY_ERROR "Bincture doesn't have enough privilege level to create and modify files in this directory.\n" //Error code -2
 
 int8_t lastError = 0;
 
@@ -74,7 +75,10 @@ void printError(int8_t errorCode){
             break;
 
         case -1:
-            puts(NO_ACCESS_ERROR);
+            puts(NO_LONGER_EXISTS_ERROR);
+            break;
+        case -2:
+            puts(CANT_MODIFY_ERROR);
             break;    
     }
     c_textcolor(WHITE);
@@ -236,5 +240,5 @@ void printProgress(int totalBytes, int processedBytes){
         progressBarFill[i] = '#';
     }
     puts(WAIT_WHILE_VISUALIZATION);
-    printf("Visualizing [%s] %.1f MB / %.1f MB | %.1f %%\n", progressBarFill, processedMBytes, totalMBytes, percents);
+    printf("Visualizing [%s] %.1f MB / %.1f MB | %.1f%%\n", progressBarFill, processedMBytes, totalMBytes, percents);
 }
