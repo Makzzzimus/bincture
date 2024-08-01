@@ -52,7 +52,7 @@ void writePixelFromFile(FILE *userFile, FILE *bmp, int processedBytes, uint8_t b
     unsigned char pixel[4] = "\0";
     for (int i = 0; i < bytesPerPixel; i++){
         fseek(userFile, processedBytes + i, SEEK_SET);
-        pixel[i] = fgetc(userFile);
+        pixel[i] = (unsigned char)fgetc(userFile);
     }
     // if (bytesPerPixel > 1){
     //     swapc(&pixel[0], &pixel[bytesPerPixel - 1]);
@@ -66,7 +66,7 @@ void writePixelFromFile(FILE *userFile, FILE *bmp, int processedBytes, uint8_t b
 void writeHeader(FILE *userFile, FILE *bmp, unsigned int userFileSize, int lostPixels, uint8_t bytesPerPixel){
     fputs("BM", bmp); //Write BM letters to specify the file format
 
-    fwrite32le(bmp, userFileSize - lostPixels * bytesPerPixel + OFFSET_TO_IMAGE_DATA); 
+    fwrite32le(bmp, userFileSize - lostPixels * bytesPerPixel + OFFSET_TO_IMAGE_DATA + bytesPerPixel == 1 ? 1024 : 0); 
 
     fwrite32le(bmp, 0); //Write reserved empty bytes
 
@@ -151,7 +151,7 @@ void buildBmpFromFile(char *userPath, int width, int height, unsigned int userFi
     #endif
 
     getFileName(userPath, userFileName); 
-    strncat(bmpPath, userFileName, strlen(userFileName));
+    strcat(bmpPath, userFileName);
     strcat(bmpPath, ".bmp");
 
     FILE *bmp = fopen(bmpPath, "wb");

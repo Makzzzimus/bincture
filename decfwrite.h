@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdio.h>
 
 void fwrite16le(FILE *file, short number); //write short to binary using little-endian

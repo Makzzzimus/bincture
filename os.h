@@ -1,3 +1,5 @@
+#pragma once
+
 void linux_strrev(char *string);
 
 void swapc(char *c1, char *c2);
