@@ -14,6 +14,7 @@
 #define PATH_TIP "Drag & drop file into the terminal window to quickly insert the path to it.\n"
 #define BPP_TIP  "The bytes per pixel value specifies the color depth and affects the number of pixels in visualization. (Most modern images use 3 Bpp)\n"
 #define SIZE_TIP  "The visualization will contain "
+#define DIRECTION_TIP "Keep in mind that visualization starts at the bottom of the image."
 
 #define ASK_PATH_PROMPT "Enter the path to the destination file: "
 #define ASK_BPP_PROMPT "Enter the number of bytes per pixel [1, 2, 3]: "
@@ -135,7 +136,6 @@ unsigned int askPath(char *path){
         lastError = 1;
 
         path[0] = '\0';
-        fclose(userFile);
         userFileSize = askPath(path);
         return userFileSize;
     }
@@ -180,18 +180,26 @@ int8_t askBytesPerPixel(){
 void askSize(int *width, int *height, int fileSize, int *lostPixels, int8_t bytesPerPixel){
     int totalPixels = fileSize / bytesPerPixel;
     char widthBuffer[6] = "\0", heightBuffer[6] = "\0";
+    unsigned int recWidth1 = 0, recHeight1 = 0, recWidth2 = 128, recHeight2 = 0; //rec - Recommended
+    int recLostPixels1 = 0, recLostPixels2 = 0;
 
-    *width = *height = (int) floor(sqrt(totalPixels));
-    if (*width % 4){
-        *height = *width += 4 - (*width % 4);
+    recWidth1 = recHeight1 = (int)floor(sqrt(totalPixels));
+    if (recWidth1 % 4){
+        recHeight1 = recWidth1 += 4 - (recWidth1 % 4);
     }
-    *lostPixels = totalPixels - *width * *height;
+    recLostPixels1 = totalPixels - recWidth1 * recHeight1;
+
+    recHeight2 = totalPixels / recWidth2;
+    if (recHeight2 % 4){
+        recHeight2 += 4 - (recHeight2 % 4);
+    }
+    recLostPixels2 = totalPixels - recWidth2 * recHeight2;
 
     printHead();
 
-    char finalTip[255] = "\0", tipBody[255] = "\0";
+    char finalTip[512] = "\0", tipBody[300] = "\0";
     strcat(finalTip, SIZE_TIP);
-    sprintf(tipBody, "%d pixels. The recommended size of visualization for this file is %dx%d. In this case, %d pixels will be lost (If this value is negative, additional white pixels will be added to start of visualization.)\n\n", totalPixels, *width, *height, *lostPixels);
+    sprintf(tipBody, "%d pixels. The recommended visualization sizes for this file are %dx%d or %dx%d (for waterfall visualization).. In the first case %d pixels will be lost, in the second case %d pixels will be lost. (If this value is negative, additional white pixels will be added to start of visualization.)\n\n", totalPixels, recWidth1, recHeight1, recWidth2, recHeight2, recLostPixels1, recLostPixels2);
     strcat(finalTip, tipBody);
     printTip(finalTip);
 
@@ -240,6 +248,7 @@ void askExit(){
     puts(SUCCESS_VISUALIZATION);
     c_textcolor(WHITE);
 
+    printTip(DIRECTION_TIP);
     puts(ASK_EXIT_PROMPT);
     c_getch();
     exit(EXIT_SUCCESS);
