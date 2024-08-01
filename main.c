@@ -2,12 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef _WIN32
-    #include <windows.h>
-#elif __linux__
-    #include <locale.h>
-#endif
-
 #include "conio.h"
 #include "bmp.h"
 #include "cli.h"
@@ -18,12 +12,6 @@ int main(){
     signed int lostPixels = 0;
     unsigned int userFileSize = 0, width = 0, height = 0;
     uint8_t bytesPerPixel = 0;
-
-    #ifdef _WIN32
-        SetConsoleOutputCP(CP_UTF8);
-    #elif __linux__
-        setlocale(LC_ALL, "");
-    #endif
 
     /* //TUI driver
     char32_t matrix[MATRIX_ROWS][MATRIX_COLUMNS] = {

@@ -9,7 +9,7 @@
 
 #define MEGABYTE_SIZE 1048576.0F
 
-#define HEADER "=========================[ Welcome to Bincture v0.1! ]=========================\n"
+#define HEADER "=========================[ Welcome to Bincture v1.0! ]=========================\n"
 
 #define PATH_TIP "Drag & drop file into the terminal window to quickly insert the path to it.\n"
 #define BPP_TIP  "The bytes per pixel value specifies the color depth and affects the number of pixels in visualization. (Most modern images use 3 Bpp)\n"
@@ -179,7 +179,7 @@ int8_t askBytesPerPixel(){
 
 void askSize(int *width, int *height, int fileSize, int *lostPixels, int8_t bytesPerPixel){
     int totalPixels = fileSize / bytesPerPixel;
-    char widthBuffer[6] = "\0", heightBuffer[6] = "\0";
+    char widthBuffer[8] = "\0", heightBuffer[8] = "\0";
     unsigned int recWidth1 = 0, recHeight1 = 0, recWidth2 = 128, recHeight2 = 0; //rec - Recommended
     int recLostPixels1 = 0, recLostPixels2 = 0;
 
@@ -197,7 +197,7 @@ void askSize(int *width, int *height, int fileSize, int *lostPixels, int8_t byte
 
     printHead();
 
-    char finalTip[512] = "\0", tipBody[300] = "\0";
+    char finalTip[512] = "\0", tipBody[325] = "\0";
     strcat(finalTip, SIZE_TIP);
     sprintf(tipBody, "%d pixels. The recommended visualization sizes for this file are %dx%d or %dx%d (for waterfall visualization).. In the first case %d pixels will be lost, in the second case %d pixels will be lost. (If this value is negative, additional white pixels will be added to start of visualization.)\n\n", totalPixels, recWidth1, recHeight1, recWidth2, recHeight2, recLostPixels1, recLostPixels2);
     strcat(finalTip, tipBody);
@@ -205,8 +205,8 @@ void askSize(int *width, int *height, int fileSize, int *lostPixels, int8_t byte
 
     printf(ASK_SIZE_PROMPT);
 
-    fgetw(widthBuffer, 5, stdin);
-    fgetw(heightBuffer, 5, stdin);
+    fgetw(widthBuffer, 7, stdin);
+    fgetw(heightBuffer, 7, stdin);
 
     *width = strtol(widthBuffer, NULL, 0);
     *height = strtol(heightBuffer, NULL, 0);
