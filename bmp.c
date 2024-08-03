@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <time.h> //For debug purposes. Probably temporary
 
 #include "conio.h"
 #include "bmp.h"
@@ -21,6 +22,7 @@
 #define NUMBER_OF_IMPORTANT_COLORS 0      //Every color is important
 
 #define KILOBYTE_SIZE 1024
+#define BUFFER_SIZE KILOBYTE_SIZE * 1024 //10 MB
 
 // Variables prefixed with [user] refer to the user file
 // Variables prefixed with [bmp] refer to the visualization file
@@ -48,17 +50,12 @@ void getFileName(char* path, char* fileName){
     }
 }
 
-void writePixelFromFile(FILE *userFile, FILE *bmp, int processedBytes, uint8_t bytesPerPixel){
-    unsigned char pixel[4] = "\0";
-    for (int i = 0; i < bytesPerPixel; i++){
-        fseek(userFile, processedBytes + i, SEEK_SET);
-        pixel[i] = (unsigned char)fgetc(userFile);
-    }
-    // if (bytesPerPixel > 1){
-    //     swapc(&pixel[0], &pixel[bytesPerPixel - 1]);
-    // }
-    
-    fwrite(pixel, sizeof(char), bytesPerPixel, bmp);
+void writeBufferFromFile(FILE *userFile, FILE *bmp, int processedBytes, int bytesLeft, uint8_t bytesPerPixel){
+    unsigned char buffer[BUFFER_SIZE] = "\0";
+    fseek(userFile, processedBytes, SEEK_SET);
+    fread(buffer, BUFFER_SIZE, 1, userFile);
+
+    fwrite(buffer, bytesLeft < BUFFER_SIZE ? bytesLeft : BUFFER_SIZE, 1, bmp);
     return;
 }
 
@@ -66,7 +63,9 @@ void writePixelFromFile(FILE *userFile, FILE *bmp, int processedBytes, uint8_t b
 void writeHeader(FILE *userFile, FILE *bmp, unsigned int userFileSize, int lostPixels, uint8_t bytesPerPixel){
     fputs("BM", bmp); //Write BM letters to specify the file format
 
-    fwrite32le(bmp, userFileSize - lostPixels * bytesPerPixel + OFFSET_TO_IMAGE_DATA + bytesPerPixel == 1 ? 1024 : 0); 
+    short palletteSize = bytesPerPixel == 1 ? 1024 : 0;
+    uint8_t ignoredBytes = (userFileSize - lostPixels * bytesPerPixel + OFFSET_TO_IMAGE_DATA + palletteSize) % bytesPerPixel;
+    fwrite32le(bmp, userFileSize - lostPixels * bytesPerPixel + OFFSET_TO_IMAGE_DATA + palletteSize - ignoredBytes); 
 
     fwrite32le(bmp, 0); //Write reserved empty bytes
 
@@ -113,21 +112,21 @@ void writePallette(FILE *bmp){
 
 void writeImageDataFromFile(FILE *userFile, FILE *bmp, unsigned int userFileSize, int lostPixels, uint8_t bytesPerPixel){
     int ignoredBytes = 0;
-    uint16_t progressPrintCooldown = 0;
+    uint16_t progressBarCooldown = 0;
 
     if((userFileSize - ignoredBytes) % bytesPerPixel != 0){
         ignoredBytes = userFileSize % bytesPerPixel;
     }
 
-    for (uint32_t processedBytes = 0; processedBytes < userFileSize - lostPixels * bytesPerPixel - ignoredBytes; processedBytes += bytesPerPixel){
-        writePixelFromFile(userFile, bmp, processedBytes, bytesPerPixel);
+    for (uint32_t processedBytes = 0; processedBytes < userFileSize - lostPixels * bytesPerPixel - ignoredBytes; processedBytes += BUFFER_SIZE){
+        writeBufferFromFile(userFile, bmp, processedBytes, (userFileSize - lostPixels * bytesPerPixel - ignoredBytes) - processedBytes, bytesPerPixel);
 
-        if (progressPrintCooldown == KILOBYTE_SIZE * 25){
+        if (progressBarCooldown == 256){
             printProgress(userFileSize - lostPixels * bytesPerPixel - ignoredBytes, processedBytes);
-            progressPrintCooldown = 0;
+            progressBarCooldown = 0;
         }
         else{
-            progressPrintCooldown++;
+            progressBarCooldown++;
         }
     }
 }
@@ -171,6 +170,7 @@ void buildBmpFromFile(char *userPath, int width, int height, unsigned int userFi
 
     writeImageDataFromFile(userFile, bmp, userFileSize, lostPixels, bytesPerPixel);
 
+    fclose(userFile);
     fclose(bmp);
 
     return;

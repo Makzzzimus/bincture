@@ -9,7 +9,7 @@
 
 #define MEGABYTE_SIZE 1048576.0F
 
-#define HEADER "=========================[ Welcome to Bincture v1.0! ]=========================\n"
+#define HEADER "=========================[ Welcome to Bincture v0.1! ]=========================\n"
 
 #define PATH_TIP "Drag & drop file into the terminal window to quickly insert the path to it.\n"
 #define BPP_TIP  "The bytes per pixel value specifies the color depth and affects the number of pixels in visualization. (Most modern images use 3 Bpp)\n"
