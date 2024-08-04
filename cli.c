@@ -12,12 +12,12 @@
 #define HEADER "=========================[ Welcome to Bincture v0.1! ]=========================\n"
 
 #define PATH_TIP "Drag & drop file into the terminal window to quickly insert the path to it.\n"
-#define BPP_TIP  "The bytes per pixel value specifies the color depth and affects the number of pixels in visualization. (Most modern images use 3 Bpp)\n"
+#define BPP_TIP  "The bytes per pixel value specifies the color depth and affects the number of pixels in visualization. \nNote: Most modern images use 3 Bpp or 4 Bpp. Depending on whether the image can have transparent pixels or not. If the visualization looks strange with a value of 3, try swapping it to 4\n"
 #define SIZE_TIP  "The visualization will contain "
 #define DIRECTION_TIP "Keep in mind that visualization starts at the bottom of the image."
 
 #define ASK_PATH_PROMPT "Enter the path to the destination file: "
-#define ASK_BPP_PROMPT "Enter the number of bytes per pixel [1, 2, 3]: "
+#define ASK_BPP_PROMPT "Enter the number of bytes per pixel [1, 2, 3, 4]: "
 #define ASK_SIZE_PROMPT "Enter the size of visualization in following format {Width} {Height} (Both must be <100000). Both variables must be dividable by 4: "
 #define ASK_EXIT_PROMPT "\nPress any key to exit the application..."
 
@@ -162,7 +162,7 @@ int8_t askBytesPerPixel(){
 
     uint8_t bytesPerPixel = c_getch() - 48;
 
-    if (bytesPerPixel == 0 || bytesPerPixel > 3){
+    if (bytesPerPixel == 0 || bytesPerPixel > 4){
         lastError = 3;
         bytesPerPixel = askBytesPerPixel();
     }
