@@ -22,7 +22,7 @@
 #define NUMBER_OF_IMPORTANT_COLORS 0      //Every color is important
 
 #define KILOBYTE_SIZE 1024
-#define BUFFER_SIZE KILOBYTE_SIZE * 1024 //10 MB
+#define BUFFER_SIZE KILOBYTE_SIZE * 512
 
 // Variables prefixed with [user] refer to the user file
 // Variables prefixed with [bmp] refer to the visualization file
@@ -121,7 +121,7 @@ void writeImageDataFromFile(FILE *userFile, FILE *bmp, unsigned int userFileSize
     for (uint32_t processedBytes = 0; processedBytes < userFileSize - lostPixels * bytesPerPixel - ignoredBytes; processedBytes += BUFFER_SIZE){
         writeBufferFromFile(userFile, bmp, processedBytes, (userFileSize - lostPixels * bytesPerPixel - ignoredBytes) - processedBytes, bytesPerPixel);
 
-        if (progressBarCooldown == 256){
+        if (progressBarCooldown == 128){
             printProgress(userFileSize - lostPixels * bytesPerPixel - ignoredBytes, processedBytes);
             progressBarCooldown = 0;
         }
@@ -168,6 +168,7 @@ void buildBmpFromFile(char *userPath, int width, int height, unsigned int userFi
         writePallette(bmp);
     }
 
+    printProgress(userFileSize - lostPixels * bytesPerPixel, 0);
     writeImageDataFromFile(userFile, bmp, userFileSize, lostPixels, bytesPerPixel);
 
     fclose(userFile);
