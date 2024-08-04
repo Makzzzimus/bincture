@@ -11,7 +11,7 @@
 
 #define HEADER "=========================[ Welcome to Bincture v0.1! ]=========================\n"
 
-#define PATH_TIP "Drag & drop file into the terminal window to quickly insert the path to it.\n"
+#define PATH_TIP "Drag & drop the file into the terminal window to quickly insert the path to it.\n"
 #define BPP_TIP  "The bytes per pixel value specifies the color depth and affects the number of pixels in visualization. \nNote: Most modern images use 3 Bpp or 4 Bpp. Depending on whether the image can have transparent pixels or not. If the visualization looks strange with a value of 3, try swapping it to 4\n"
 #define SIZE_TIP  "The visualization will contain "
 #define DIRECTION_TIP "Keep in mind that visualization starts at the bottom of the image."
@@ -22,20 +22,20 @@
 #define ASK_EXIT_PROMPT "\nPress any key to exit the application..."
 
 #define WAIT_WHILE_VISUALIZATION "The process of visualization may take a while to complete..."
-#define SUCCESS_VISUALIZATION "The process of visualization has successfully finished. File was saved in current directory in the folder \"Bincture visualizations\""
+#define SUCCESS_VISUALIZATION "The process of visualization has successfully finished. The file was saved in the current directory in the folder \"Bincture visualizations\""
 
 //Positive error codes refer to errors in CLI input, while negative errors in runtime
-#define INVALID_FILE_ERROR "Invalid file path provided!\n"                                  //Error code 1
-#define LARGE_FILE_ERROR "File is too large or empty! File must be smaller than 4 GB\n"     //Error code 2
-#define INVALID_BPP_ERROR "Enter only numbers ranging from 1 to 3!\n"                       //Error code 3
-#define NEGATIVE_SIZE_ERROR "Enter only numbers greater than 0!\n"                          //Error code 4
-#define UNDIVIDABLE_SIZE_ERROR "Both width and height values must be dividable by 4!\n"     //Error code 5
-#define LARGE_SIZE_ERROR "Visualization can't handle more than 4,294,967,295 bytes!\n"      //Error code 6
-#define NO_PALLETTE_ERROR "The pallette.txt file doesn't exist. This file is required to generate 8-bit images. It contains all colors of the image. Download it at github.com/Makzzzimus/bincture/blob/main/pallette.txt or create your own." //Error code 7
+#define INVALID_FILE_ERROR "Invalid file path provided!\n"                                          //Error code 1
+#define LARGE_FILE_ERROR "The file is too large or empty! The file must be smaller than 4 GB\n"     //Error code 2
+#define INVALID_BPP_ERROR "Enter only numbers ranging from 1 to 3!\n"                               //Error code 3
+#define NEGATIVE_SIZE_ERROR "Enter only numbers greater than 0!\n"                                  //Error code 4
+#define UNDIVIDABLE_SIZE_ERROR "Both width and height values must be dividable by 4!\n"             //Error code 5
+#define LARGE_SIZE_ERROR "Visualization can't handle more than 4,294,967,295 bytes!\n"              //Error code 6
+#define NO_PALLETTE_ERROR "The pallette.txt file doesn't exist. This file is required to generate 8-bit images. It contains all colors of the image. Download it from project's repo github.com/Makzzzimus/bincture/blob/main/pallette.txt or create your own." //Error code 7
 
 #define NO_LONGER_EXISTS_ERROR "\nThe given file doesn't exist anymore or can't be accessed\n"                             //Error code -1
-#define CANT_MODIFY_ERROR "\nBincture doesn't have enough privilege level to create and modify files in this directory.\n" //Error code -2
-#define MOVED_PALLETTE_ERROR "\nThe pallette.txt file was moved or deleted and can't be accessed"
+#define CANT_MODIFY_ERROR "\nBincture doesn't have enough privilege to create and modify files in this directory.\n"       //Error code -2
+#define MOVED_PALLETTE_ERROR "\nThe pallette.txt file was moved or deleted and can't be accessed"                          //Error code -3
 
 int8_t lastError = 0;
 
@@ -180,12 +180,12 @@ int8_t askBytesPerPixel(){
 void askSize(int *width, int *height, int fileSize, int *lostPixels, int8_t bytesPerPixel){
     int totalPixels = fileSize / bytesPerPixel;
     char widthBuffer[8] = "\0", heightBuffer[8] = "\0";
-    unsigned int recWidth1 = 0, recHeight1 = 0, recWidth2 = 128, recHeight2 = 0; //rec - Recommended
-    int recLostPixels1 = 0, recLostPixels2 = 0;
+    unsigned int recWidth1 = 256, recHeight1 = 0, recWidth2 = 128, recHeight2 = 0; //rec - Recommended
+    int recLostPixels1 = 0, //recLostPixels2 = 0;
 
-    recWidth1 = recHeight1 = (int)floor(sqrt(totalPixels));
-    if (recWidth1 % 4){
-        recHeight1 = recWidth1 += 4 - (recWidth1 % 4);
+    recHeight1 = totalPixels / recWidth1;
+    if (recHeight1 % 4){
+        recHeight1 += 4 - (recHeight1 % 4);
     }
     recLostPixels1 = totalPixels - recWidth1 * recHeight1;
 
@@ -193,13 +193,13 @@ void askSize(int *width, int *height, int fileSize, int *lostPixels, int8_t byte
     if (recHeight2 % 4){
         recHeight2 += 4 - (recHeight2 % 4);
     }
-    recLostPixels2 = totalPixels - recWidth2 * recHeight2;
+    //recLostPixels2 = totalPixels - recWidth2 * recHeight2;
 
     printHead();
 
     char finalTip[512] = "\0", tipBody[325] = "\0";
     strcat(finalTip, SIZE_TIP);
-    sprintf(tipBody, "%d pixels. The recommended visualization sizes for this file are %dx%d or %dx%d (for waterfall visualization).. In the first case %d pixels will be lost, in the second case %d pixels will be lost. (If this value is negative, additional white pixels will be added to start of visualization.)\n\n", totalPixels, recWidth1, recHeight1, recWidth2, recHeight2, recLostPixels1, recLostPixels2);
+    sprintf(tipBody, "%d pixels. The recommended visualization sizes for this file are %dx%d or %dx%d. In both cases, %d pixels are lost \nNote: If the value of lost pixels is negative, additional white pixels are added to the start visualization.)\n\n", totalPixels, recWidth1, recHeight1, recWidth2, recHeight2, recLostPixels1);
     strcat(finalTip, tipBody);
     printTip(finalTip);
 
@@ -232,7 +232,7 @@ void askSize(int *width, int *height, int fileSize, int *lostPixels, int8_t byte
     }
 
     *lostPixels = totalPixels - *width * *height;
-    printf("Visualization size will be %dx%d. In this case, %d pixels will be lost \nContinue with this size? [Y/n]: ", *width, *height, *lostPixels);
+    printf("Selected visualization size is %dx%d. In this case, %d pixels will be lost \nContinue with this size? [Y/n]: ", *width, *height, *lostPixels);
     char action = c_getch();
     if (action == 'n'){
         fflush(stdin);
