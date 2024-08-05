@@ -180,14 +180,14 @@ int8_t askBytesPerPixel(){
 void askSize(int *width, int *height, int fileSize, int *lostPixels, int8_t bytesPerPixel){
     int totalPixels = fileSize / bytesPerPixel;
     char widthBuffer[8] = "\0", heightBuffer[8] = "\0";
-    unsigned int recWidth1 = 256, recHeight1 = 0, recWidth2 = 128, recHeight2 = 0; //rec - Recommended
-    int recLostPixels1 = 0, //recLostPixels2 = 0;
+    unsigned int recWidth1 = 128, recHeight1 = 0, recWidth2 = 256, recHeight2 = 0; //rec - Recommended
+    int recLostPixels = 0;
 
     recHeight1 = totalPixels / recWidth1;
     if (recHeight1 % 4){
         recHeight1 += 4 - (recHeight1 % 4);
     }
-    recLostPixels1 = totalPixels - recWidth1 * recHeight1;
+    recLostPixels = totalPixels - recWidth1 * recHeight1;
 
     recHeight2 = totalPixels / recWidth2;
     if (recHeight2 % 4){
@@ -199,7 +199,7 @@ void askSize(int *width, int *height, int fileSize, int *lostPixels, int8_t byte
 
     char finalTip[512] = "\0", tipBody[325] = "\0";
     strcat(finalTip, SIZE_TIP);
-    sprintf(tipBody, "%d pixels. The recommended visualization sizes for this file are %dx%d or %dx%d. In both cases, %d pixels are lost \nNote: If the value of lost pixels is negative, additional white pixels are added to the start visualization.)\n\n", totalPixels, recWidth1, recHeight1, recWidth2, recHeight2, recLostPixels1);
+    sprintf(tipBody, "%d pixels. The recommended visualization sizes for this file are %dx%d or %dx%d. In both cases, %d pixels are lost \nNote: If the value of lost pixels is negative, additional white pixels are added to the start visualization.)\n\n", totalPixels, recWidth1, recHeight1, recWidth2, recHeight2, recLostPixels);
     strcat(finalTip, tipBody);
     printTip(finalTip);
 
