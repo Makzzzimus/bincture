@@ -17,12 +17,8 @@
 * Executable itself is tiny and takes up <100 kb of storage.
 
 ## 💿 Installation
-### On Windows
-Download the executable from [release page](https://github.com/Makzzzimus/bincture/releases/) and launch. No setup is required.
-
-### On Debian-based Linux distros
-
-### On RPM-based Linux distros
+Download the portable application from [release page](https://github.com/Makzzzimus/bincture/releases/) and launch. No installation is required.
+Note: pallette.txt is required to run 8-bit visualizations. It can be found [here](https://github.com/Makzzzimus/bincture/blob/main/pallette.txt)
 
 ## 📝 License
 Later
