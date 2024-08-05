@@ -8,13 +8,16 @@
 <!--</div>-->
 
 ## 🖼 Examples
-|explorer.exe (24-bit) | ELF binary (8-bit) | shell32.dll.mun (24-bit) | tui.c (16-bit)
-|-|-|-|-|
-|<img src="readme-assets/example1.png" alt="explorer.exe visualization" width="200"> | <img src="readme-assets/example2.png" alt="Visualization of the bincture's ELF binary" width="200"> | <img src="readme-assets/example3.png" alt="shell32.dll.mun visualization" width="200"> |<img src="readme-assets/example4.png" alt="tui.c visualization" width="200">
+|Half-Life01.mp3 (24-bit) | ELF binary (8-bit) | shell32.dll.mun (32-bit) | tui.c (24-bit) | secret.docx (16-bit)
+|-|-|-|-|-|
+|<img src="readme-assets/example1.png" alt="Half-Life01.mp3 visualization" width="200"> | <img src="readme-assets/example2.png" alt="Visualization of the bincture's ELF binary" width="200"> | <img src="readme-assets/example3.png" alt="shell32.dll.mun visualization" width="200"> | <img src="readme-assets/example4.png" alt="tui.c visualization" width="100"> |<img src="readme-assets/example5.png" alt="gl finding out the secret" width="100">
 
 ## ✨ Features
 * Visualization can be saved with different bits per pixel value.
 * Executable itself is tiny and takes up <100 kb of storage.
+* Massive files are visualized in a matter of seconds.
+
+*Fun fact: The logo and icons were made in the Windows 98 style.*
 
 ## 💿 Installation
 Download the portable application from [release page](https://github.com/Makzzzimus/bincture/releases/) and launch. No installation is required.
