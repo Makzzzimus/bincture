@@ -38,15 +38,21 @@ unsigned int getFileSize(FILE *userFile){
 }
 
 void getFileName(char* path, char* fileName){
-    for (int i = strlen(path); i > 0; i--){ //Find file name
+    bool relativePath = true;
+    for (int i = strlen(path); i > -1; i--){ //Find file name
         if(path[i] == '\\' || path[i] == '/'){
             strrev(fileName);
+            relativePath = false;
             break;
             return;
         }
         else{
             fileName[strlen(fileName)] = path[i];
         }
+    }
+    if (relativePath){
+        strrev(fileName);
+        return;
     }
 }
 
