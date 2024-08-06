@@ -1,4 +1,4 @@
-FLAGS = -g
+FLAGS = -g -Wall
 OBJECTS = ./bin/main.o ./bin/cli.o ./bin/bmp.o ./bin/os.o ./bin/decfwrite.o ./bin/conio.o 
 
 ifdef OS

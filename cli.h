@@ -11,7 +11,7 @@ void printHead();
 
 unsigned int askPath(char *path);
 int8_t askBytesPerPixel();
-void askSize(int *width, int *height, int fileSize, int *lostPixels, int8_t bytesPerPixel);
+void askSize(unsigned int *width, unsigned int *height, int fileSize, int *lostPixels, int8_t bytesPerPixel);
 bool askThreading();
 void askExit();
 void printProgress(int totalBytes, int processedBytes);

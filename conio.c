@@ -83,12 +83,12 @@ static void setbits(unsigned char *v,
 }
 
 
-static unsigned char getbits(unsigned char v, int bit_index, int nbits)
-{
-  unsigned char r = v >> bit_index;
-  clearbits(&r, nbits, sizeof(unsigned char) * CHAR_BIT - nbits);
-  return r;
-}
+// static unsigned char getbits(unsigned char v, int bit_index, int nbits)
+// {
+//   unsigned char r = v >> bit_index;
+//   clearbits(&r, nbits, sizeof(unsigned char) * CHAR_BIT - nbits);
+//   return r;
+// }
 
 
 void c_gettextinfo(struct text_info *r)
@@ -157,7 +157,7 @@ void c_textbackground(int newcolor)
   struct text_info ti;
   c_gettextinfo(&ti);
   unsigned char wColor = ti.attribute;
-  unsigned char old = getbits(wColor, 4, 4);
+  //unsigned char old = getbits(wColor, 4, 4);
   setbits(&wColor, 4, 4, newcolor);
   c_textattr(wColor);
 }
@@ -167,7 +167,7 @@ void c_textcolor(int newcolor)
   struct text_info ti;
   c_gettextinfo(&ti);
   unsigned char wColor = ti.attribute;
-  int old = getbits(wColor, 0, 4);
+  //int old = getbits(wColor, 0, 4);
   setbits(&wColor, 0, 4, newcolor);
   c_textattr(wColor);
 }

@@ -177,7 +177,7 @@ int8_t askBytesPerPixel(){
     return bytesPerPixel;
 }
 
-void askSize(int *width, int *height, int fileSize, int *lostPixels, int8_t bytesPerPixel){
+void askSize(unsigned int *width, unsigned int *height, int fileSize, int *lostPixels, int8_t bytesPerPixel){
     int totalPixels = fileSize / bytesPerPixel;
     char widthBuffer[8] = "\0", heightBuffer[8] = "\0";
     unsigned int recWidth1 = 128, recHeight1 = 0, recWidth2 = 256, recHeight2 = 0; //rec - Recommended
