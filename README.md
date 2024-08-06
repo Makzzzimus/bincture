@@ -23,6 +23,24 @@
 Download the portable application from [release page](https://github.com/Makzzzimus/bincture/releases/) and launch. No installation is required.
 Note: pallette.txt is required to run 8-bit visualizations. It can be found [here](https://github.com/Makzzzimus/bincture/blob/main/pallette.txt)
 
+## 🧱 Building from source
+### On Linux 🐧
+Make sure GCC and Make are installed before proceeding.
+
+Enter the following command in the terminal while inside the source directory:
+```
+make
+```
+Application was dropped to the newly created bin folder in the same directory
+### On Windows 🎴
+Make sure MinGW-w64 toolchain is installed and added to environmental variables before proceeding.
+
+Enter the following command in the terminal while inside the source directory:
+```
+mingw32-make
+```
+Executable was dropped to the newly created bin folder in the same directory
+
 ## 📝 License
 Later
 
