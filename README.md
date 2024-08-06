@@ -42,7 +42,7 @@ mingw32-make
 Executable was dropped to the newly created bin folder in the same directory
 
 ## 📝 License
-Later
+This project is licensed under the terms of the GNU General Public License v2.0. See the [LICENSE](https://github.com/Makzzzimus/bincture/blob/main/LICENSE.md) file for details
 
 ## 📑 Credits
 ### 🎇 Inspiration
