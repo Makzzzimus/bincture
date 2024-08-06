@@ -12,6 +12,9 @@
 |-|-|-|-|-|
 |<img src="readme-assets/example1.png" alt="Half-Life01.mp3 visualization" width="200"> | <img src="readme-assets/example2.png" alt="Visualization of the bincture's ELF binary" width="200"> | <img src="readme-assets/example3.png" alt="shell32.dll.mun visualization" width="200"> | <img src="readme-assets/example4.png" alt="tui.c visualization" width="100"> |<img src="readme-assets/example5.png" alt="gl finding out the secret" width="100">
 
+## ❓ Where and why to use it
+This application can be used to find hidden bitmaps within binary files and to analyze the file structure. With this tool, you can find code density, ASCII character blocks, and more. I primarily see this tool being used for educational purposes, helping users better understand the structure of binary files.
+
 ## ✨ Features
 * Visualization can be saved with different bits per pixel value.
 * Executable itself is tiny and takes up <100 kb of storage.
