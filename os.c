@@ -31,8 +31,8 @@ void linux_strrev(char *string){
     }
 }
 
-void swapc(char *c1, char *c2){
-    char *temp = c1;
-    c1 = c2;
-    c2 = temp;
-}
+// void swapc(char *c1, char *c2){
+//     char *temp = c1;
+//     c1 = c2;
+//     c2 = temp;
+// }

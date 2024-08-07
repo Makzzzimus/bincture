@@ -26,7 +26,7 @@
 #include "bmp.h"
 #include "cli.h"
 
-#define MEGABYTE_SIZE 1048576.0F
+#define MEGABYTE_SIZE 1048576
 
 #define HEADER "=========================[ Welcome to Bincture v0.1! ]=========================\n"
 
@@ -277,7 +277,7 @@ void printProgress(int totalBytes, int processedBytes){
     printHead();
 
     char progressBarFill[26] = ".........................";
-    float totalMBytes =  (float)totalBytes / MEGABYTE_SIZE, processedMBytes = (float)processedBytes / MEGABYTE_SIZE,
+    float totalMBytes =  (float)totalBytes / (float)MEGABYTE_SIZE, processedMBytes = (float)processedBytes / (float)MEGABYTE_SIZE,
     percents = processedMBytes / (totalMBytes / 100);
 
     for(int i = 0; i < percents / 4; i++){

@@ -21,7 +21,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-#include <time.h> //For debug purposes. Probably temporary
 
 #include "conio.h"
 #include "bmp.h"
@@ -41,7 +40,7 @@
 #define NUMBER_OF_IMPORTANT_COLORS 0      //Every color is important
 
 #define KILOBYTE_SIZE 1024
-#define BUFFER_SIZE KILOBYTE_SIZE * 512
+#define BUFFER_SIZE (KILOBYTE_SIZE * 512)
 
 // Variables prefixed with [user] refer to the user file
 // Variables prefixed with [bmp] refer to the visualization file
