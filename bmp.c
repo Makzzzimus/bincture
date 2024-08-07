@@ -40,11 +40,12 @@
 #define NUMBER_OF_IMPORTANT_COLORS 0      //Every color is important
 
 #define KILOBYTE_SIZE 1024
-#define BUFFER_SIZE (KILOBYTE_SIZE * 512)
+#define BUFFER_SIZE (KILOBYTE_SIZE * 1024)
 
 // Variables prefixed with [user] refer to the user file
 // Variables prefixed with [bmp] refer to the visualization file
 
+static unsigned char buffer[BUFFER_SIZE] = "\0";
 
 unsigned int getFileSize(FILE *userFile){
     unsigned int userFileSize = 0;
@@ -75,7 +76,6 @@ void getFileName(char* path, char* fileName){
 }
 
 void writeBufferFromFile(FILE *userFile, FILE *bmp, int processedBytes, int bytesLeft, uint8_t bytesPerPixel){
-    unsigned char buffer[BUFFER_SIZE] = "\0";
     fseek(userFile, processedBytes, SEEK_SET);
     fread(buffer, BUFFER_SIZE, 1, userFile);
 
@@ -126,9 +126,9 @@ void writePallette(FILE *bmp){
     }
 
     for(int i = 0; i < KILOBYTE_SIZE; i++){
-        char buffer[4] = "\0";
-        fgetw(buffer, 3, pallette);
-        unsigned char byte = strtol(buffer, NULL, 0);
+        char digits[4] = "\0";
+        fgetw(digits, 3, pallette);
+        unsigned char byte = strtol(digits, NULL, 0);
         fwrite(&byte, 1, 1, bmp);
     }
     fclose(pallette);
@@ -145,7 +145,7 @@ void writeImageDataFromFile(FILE *userFile, FILE *bmp, unsigned int userFileSize
     for (uint32_t processedBytes = 0; processedBytes < userFileSize - lostPixels * bytesPerPixel - ignoredBytes; processedBytes += BUFFER_SIZE){
         writeBufferFromFile(userFile, bmp, processedBytes, (userFileSize - lostPixels * bytesPerPixel - ignoredBytes) - processedBytes, bytesPerPixel);
 
-        if (progressBarCooldown == 128){
+        if (progressBarCooldown == 64){
             printProgress(userFileSize - lostPixels * bytesPerPixel - ignoredBytes, processedBytes);
             progressBarCooldown = 0;
         }

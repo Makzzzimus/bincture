@@ -56,7 +56,7 @@
 #define CANT_MODIFY_ERROR "\nBincture doesn't have enough privilege to create and modify files in this directory.\n"       //Error code -2
 #define MOVED_PALLETTE_ERROR "\nThe pallette.txt file was moved or deleted and can't be accessed"                          //Error code -3
 
-int8_t lastError = 0;
+static int8_t lastError = 0;
 
 void fgetw(char *buffer, uint8_t maxLength, FILE *file){
     char temp;
