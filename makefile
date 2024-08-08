@@ -1,3 +1,4 @@
+CC = gcc
 FLAGS = -g -Wall
 OBJECTS = ./bin/main.o ./bin/cli.o ./bin/bmp.o ./bin/os.o ./bin/decfwrite.o ./bin/conio.o 
 
@@ -12,10 +13,10 @@ endif
 all: bin | ${OUTPUT}
 
 ${OUTPUT}: ${OBJECTS}
-	gcc ${FLAGS} $^ -o $@
+	${CC} ${FLAGS} $^ -o $@
 
 bin/%.o: %.c
-	gcc ${FLAGS} -c $^ -o $@
+	${CC} ${FLAGS} -c $^ -o $@
 
 bin:
 	mkdir bin

@@ -23,9 +23,10 @@ This application can be used to find hidden bitmaps within binary files and to a
 *Fun fact: The logo and icons were made in the Windows 98 style.*
 
 ## 💿 Installation
-Download the portable application from [release page](https://github.com/Makzzzimus/bincture/releases/) and launch. No installation is required.
+Download the portable application from [release page](https://github.com/Makzzzimus/bincture/releases/) and launch. No installation is required. 
 Note: pallette.txt is required to run 8-bit visualizations. It can be found [here](https://github.com/Makzzzimus/bincture/blob/main/pallette.txt)
 
+Sorry, no build for macOS. But you can try to compile from the source.
 ## 🧱 Building from source
 ### On Linux 🐧
 Make sure GCC and Make are installed before proceeding.
