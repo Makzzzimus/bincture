@@ -28,7 +28,7 @@
 
 #define MEGABYTE_SIZE 1048576
 
-#define HEADER "=========================[ Welcome to Bincture v0.1! ]=========================\n"
+#define HEADER "========================[ Welcome to Bincture v0.1a! ]=========================\n"
 
 #define PATH_TIP "Drag & drop the file into the terminal window to quickly insert the path to it.\n"
 #define BPP_TIP                                                                                                       \
@@ -53,7 +53,7 @@
 // Positive error codes refer to errors in CLI input, while negative errors in runtime
 #define INVALID_FILE_ERROR "Invalid file path provided!\n"                                       // Error code 1
 #define LARGE_FILE_ERROR "The file is too large or empty! The file must be smaller than 4 GB\n"  // Error code 2
-#define INVALID_BPP_ERROR "Enter only numbers ranging from 1 to 3!\n"                            // Error code 3
+#define INVALID_BPP_ERROR "Enter only numbers ranging from 1 to 4!\n"                            // Error code 3
 #define NEGATIVE_SIZE_ERROR "Enter only numbers greater than 0!\n"                               // Error code 4
 #define UNDIVIDABLE_SIZE_ERROR "Both width and height values must be dividable by 4!\n"          // Error code 5
 #define LARGE_SIZE_ERROR "Visualization can't handle more than 4,294,967,295 bytes!\n"           // Error code 6
