@@ -19,18 +19,18 @@
 
 #pragma once
 
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
-void fgetw(char *buffer, uint8_t maxLength, FILE *file); // Get word from file
+void fgetw(char* buffer, uint8_t maxLength, FILE* file);  // Get word from file
 
 void printError(int8_t errorCode);
-void printTip(char *string);
+void printTip(char* string);
 void printHead();
 
-unsigned int askPath(char *path);
+unsigned int askPath(char* path);
 int8_t askBytesPerPixel();
-void askSize(unsigned int *width, unsigned int *height, int fileSize, int *lostPixels, int8_t bytesPerPixel);
+void askSize(unsigned int* width, unsigned int* height, int fileSize, int* lostPixels, int8_t bytesPerPixel);
 bool askThreading();
 void askExit();
 void printProgress(int totalBytes, int processedBytes);

@@ -19,15 +19,15 @@
 
 #pragma once
 
-void linux_strrev(char *string);
+void linux_strrev(char* string);
 
-//void swapc(char *c1, char *c2);
+// void swapc(char *c1, char *c2);
 
 #ifdef _WIN32
-    #define OS 'w'
+#define OS 'w'
 #elif __unix__
-    #define OS 'u'
-    #define strrev(string) linux_strrev(string)
+#define OS 'u'
+#define strrev(string) linux_strrev(string)
 #else
-    #define OS 'n'
+#define OS 'n'
 #endif
